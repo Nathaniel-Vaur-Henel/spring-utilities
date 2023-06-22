@@ -1,2 +1,3 @@
-# spring-utilities
-Some utils for Spring
+# Spring Utilities
+
+Some convenient utils to easily automatize frequently task in Spring.
