@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <groupId>fr.nvh.spring-utilities</groupId>
+    <artifactId>spring-utilities</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+    <name>Spring Utilities</name>
+    <description>Some convenient utils to easily automatize frequently task in Spring.
+    </description>
+    <url>https://github.com/Nathaniel-Vaur-Henel/spring-utilities</url>
+    <scm>
+        <url>https://github.com/Nathaniel-Vaur-Henel/spring-utilities</url>
+    </scm>
+    <inceptionYear>2023</inceptionYear>
+
+    <contributors>
+        <contributor>
+            <name>Nathaniel Vaur Henel</name>
+            <email>nathaniel.vaur.henel@gmail.com</email>
+        </contributor>
+    </contributors>
+
+    <modules>
+        <module>spring-utilities-data</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>20</maven.compiler.source>
+        <maven.compiler.target>20</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-boot-starter-parent.version>3.1.0</spring-boot-starter-parent.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${spring-boot-starter-parent.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
