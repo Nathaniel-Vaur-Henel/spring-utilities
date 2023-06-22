@@ -12,4 +12,4 @@ It is these kinds of tasks that we want to facilitate here.
 
 In [libraries](libraries) you will find code to import into your project.   
 In [examples](examples) you will find examples code to show how you can use it. We will write tests and tiny runnable
-applications to help you to understand the implementation.   
+applications to help you to understand how to use our utilities.   
