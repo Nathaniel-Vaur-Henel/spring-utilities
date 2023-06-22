@@ -10,6 +10,12 @@ This library contains some convenient utils to easily automatize frequently task
 From one project to another, some tasks keep coming back.
 It is these kinds of tasks that we want to facilitate here.
 
-In [libraries](libraries) you will find code to import into your project.   
-In [examples](examples) you will find examples code to show how you can use it. We will write tests and tiny runnable
-applications to help you to understand how to use our utilities.   
+In [libraries](libraries) directory, you will find code to import into your project.   
+In [examples](examples) directory, you will find examples code to show how you can use it.
+We will write tests and tiny runnable applications to help you to understand how to use our utilities.
+
+## Some Information
+
+- We are using [palantir-java-format](https://github.com/palantir/palantir-java-format).
+- We are using [Lombok](https://projectlombok.org/).
+- We are using [Pitest](https://pitest.org/) for our test.

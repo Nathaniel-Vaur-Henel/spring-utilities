@@ -13,12 +13,11 @@
 
     <groupId>fr.nvh.spring-utilities</groupId>
     <artifactId>spring-utilities</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <packaging>pom</packaging>
     <name>Spring Utilities</name>
-    <description>Some convenient utils to easily automatize frequently task in Spring.
-    </description>
+    <description>Some convenient utils to easily automatize frequently task in Spring.</description>
     <url>https://github.com/Nathaniel-Vaur-Henel/spring-utilities</url>
     <scm>
         <url>https://github.com/Nathaniel-Vaur-Henel/spring-utilities</url>
@@ -29,6 +28,12 @@
         <contributor>
             <name>Nathaniel Vaur Henel</name>
             <email>nathaniel.vaur.henel@gmail.com</email>
+            <url>https://nathaniel-vaur-henel.github.io</url>
+            <roles>
+                <role>Creator</role>
+                <role>Main contributor</role>
+            </roles>
+            <timezone>Europe/Paris</timezone>
         </contributor>
     </contributors>
 
@@ -41,6 +46,7 @@
         <maven.compiler.target>20</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot-starter-parent.version>3.1.0</spring-boot-starter-parent.version>
+        <pitest.version>1.14.2</pitest.version>
     </properties>
 
     <dependencyManagement>
