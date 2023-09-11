@@ -211,8 +211,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
 /**
- * This class permits to build a {@link Predicate} with {@link
- * SpecificationOperator#GREATER_OR_EQUAL}.
+ * This class permits to build a {@link Predicate} with {@link SpecificationOperator#GREATER_OR_EQUAL}.
  */
 class PredicateFilterBuilderGreaterOrEqual implements PredicateFilterBuilder {
     @Override

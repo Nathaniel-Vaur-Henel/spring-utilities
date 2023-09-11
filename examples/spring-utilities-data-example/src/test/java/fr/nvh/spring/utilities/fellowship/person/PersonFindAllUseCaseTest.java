@@ -237,7 +237,7 @@ class PersonFindAllUseCaseTest {
         params.put("notParamName", "something");
 
         // when
-        EnumMap<PersonRequestParamType, String> converted =
+        Map<PersonRequestParamType, String> converted =
                 MapStringToMapEnumConverter.convert(PersonRequestParamType.class, params);
 
         // then
@@ -286,7 +286,7 @@ class PersonFindAllUseCaseTest {
         // then
         Assertions.assertThat(result)
                 .hasSize(4)
-                .allMatch(personEntity -> TestUtils.isWellFiltered(this, personEntity, value));
+            .allMatch(personEntity -> TestUtils.isWellFiltered(personEntity, value));
     }
 
     @Test

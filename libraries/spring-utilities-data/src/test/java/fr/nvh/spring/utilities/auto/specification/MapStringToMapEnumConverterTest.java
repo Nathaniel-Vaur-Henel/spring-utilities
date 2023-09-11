@@ -234,9 +234,10 @@ class MapStringToMapEnumConverterTest {
         var converted = MapStringToMapEnumConverter.convert(DefaultRequestParamType.class, params);
 
         // then
-        assertThat(converted).hasSize(2);
-        assertThat(converted.get(DefaultRequestParamType.PARAM_1)).isEqualTo(VALUE_1);
-        assertThat(converted.get(DefaultRequestParamType.PARAM_2)).isEqualTo(VALUE_2);
+        assertThat(converted)
+            .hasSize(2)
+            .containsEntry(DefaultRequestParamType.PARAM_1, VALUE_1)
+            .containsEntry(DefaultRequestParamType.PARAM_2, VALUE_2);
     }
 
     @Test
@@ -251,9 +252,10 @@ class MapStringToMapEnumConverterTest {
         var converted = MapStringToMapEnumConverter.convert(ParamNameRequestParamType.class, params);
 
         // then
-        assertThat(converted).hasSize(2);
-        assertThat(converted.get(ParamNameRequestParamType.NAMED_PARAM_1)).isEqualTo(VALUE_1);
-        assertThat(converted.get(ParamNameRequestParamType.NAMED_PARAM_2)).isEqualTo(VALUE_2);
+        assertThat(converted)
+            .hasSize(2)
+            .containsEntry(ParamNameRequestParamType.NAMED_PARAM_1, VALUE_1)
+            .containsEntry(ParamNameRequestParamType.NAMED_PARAM_2, VALUE_2);
     }
 
     @Test
@@ -268,9 +270,10 @@ class MapStringToMapEnumConverterTest {
         var converted = MapStringToMapEnumConverter.convert(SetRequestParamType.class, params);
 
         // then
-        assertThat(converted).hasSize(2);
-        assertThat(converted.get(SetRequestParamType.FILTER)).isEqualTo(VALUE_1);
-        assertThat(converted.get(SetRequestParamType.SOME_CASES)).isEqualTo(VALUE_2);
+        assertThat(converted)
+            .hasSize(2)
+            .containsEntry(SetRequestParamType.FILTER, VALUE_1)
+            .containsEntry(SetRequestParamType.SOME_CASES, VALUE_2);
     }
 
     @Test
@@ -285,9 +288,10 @@ class MapStringToMapEnumConverterTest {
         var converted = MapStringToMapEnumConverter.convert(SetRequestParamType.class, params);
 
         // then
-        assertThat(converted).hasSize(2);
-        assertThat(converted.get(SetRequestParamType.FILTER)).isEqualTo(VALUE_1);
-        assertThat(converted.get(SetRequestParamType.SOME_CASES)).isEqualTo(VALUE_2);
+        assertThat(converted)
+            .hasSize(2)
+            .containsEntry(SetRequestParamType.FILTER, VALUE_1)
+            .containsEntry(SetRequestParamType.SOME_CASES, VALUE_2);
     }
 
     @Test
@@ -301,8 +305,7 @@ class MapStringToMapEnumConverterTest {
         var converted = MapStringToMapEnumConverter.convert(SetRequestParamType.class, params);
 
         // then
-        assertThat(converted).hasSize(1);
-        assertThat(converted.get(SetRequestParamType.FILTER)).isEqualTo(VALUE_1);
+        assertThat(converted).hasSize(1).containsEntry(SetRequestParamType.FILTER, VALUE_1);
     }
 
     @Test
@@ -315,6 +318,6 @@ class MapStringToMapEnumConverterTest {
         var converted = MapStringToMapEnumConverter.convert(SetRequestParamType.class, params);
 
         // then
-        assertThat(converted).hasSize(0);
+        assertThat(converted).isEmpty();
     }
 }

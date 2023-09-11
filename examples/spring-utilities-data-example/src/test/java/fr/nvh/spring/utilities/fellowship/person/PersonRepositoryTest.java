@@ -217,7 +217,7 @@ import static fr.nvh.spring.utilities.fellowship.person.TestConstants.PERSONS_CO
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-public class PersonRepositoryTest {
+class PersonRepositoryTest {
 
     @Autowired
     private PersonRepository personRepository;

@@ -232,8 +232,7 @@ class PredicateFilterBuilderContaining implements PredicateFilterBuilder {
     }
 
     /**
-     * @return the searchValue beginning and ending with {@link
-     *     PredicateFilterBuilderContaining#LIKE_WILDCARD}
+     * @return the searchValue beginning and ending with {@link PredicateFilterBuilderContaining#LIKE_WILDCARD}
      */
     private String mapToLikeContaining(@NonNull String searchValue) {
         StringBuilder sb = new StringBuilder();

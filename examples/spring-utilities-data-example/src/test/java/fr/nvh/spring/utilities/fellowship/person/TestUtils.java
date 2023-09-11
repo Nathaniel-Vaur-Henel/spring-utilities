@@ -208,12 +208,10 @@ package fr.nvh.spring.utilities.fellowship.person;
 
 public class TestUtils {
     static boolean notNullAndContains(String value, String searchedValue) {
-        boolean b = value != null && value.contains(searchedValue);
-        return b;
+        return value != null && value.contains(searchedValue);
     }
 
-    static boolean isWellFiltered(
-            PersonFindAllUseCaseTest personFindAllUseCaseTest, PersonEntity person, String searchedValue) {
+    static boolean isWellFiltered(PersonEntity person, String searchedValue) {
         return notNullAndContains(person.getEmail(), searchedValue)
                 || notNullAndContains(person.getFirstName(), searchedValue)
                 || notNullAndContains(person.getLastName(), searchedValue);

@@ -217,8 +217,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Simple example controller to test {@link
- * fr.nvh.spring.utilities.auto.specification.AutoSpecification}
+ * Simple example controller to test {@link fr.nvh.spring.utilities.auto.specification.AutoSpecification}
  */
 @Slf4j
 @RequiredArgsConstructor

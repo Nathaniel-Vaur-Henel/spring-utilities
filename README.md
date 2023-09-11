@@ -19,3 +19,4 @@ We will write tests and tiny runnable applications to help you to understand how
 - We are using [palantir-java-format](https://github.com/palantir/palantir-java-format).
 - We are using [Lombok](https://projectlombok.org/).
 - We are using [Pitest](https://pitest.org/) for our test.
+- We are using [Sonar lint](https://rules.sonarsource.com/java/) for quality and vulnerabilities.

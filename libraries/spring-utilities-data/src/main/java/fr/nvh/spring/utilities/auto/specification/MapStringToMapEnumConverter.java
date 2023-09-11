@@ -231,10 +231,10 @@ public class MapStringToMapEnumConverter {
      *     RequestParamType}
      * @param sourceParams a {@link Map}<String, String> where entries are param name
      *     / value.
-     * @return a converted @link EnumMap}<<code>P</code>, String> according.
+     * @return a converted {@link EnumMap}<<code>P</code>, String> according.
      * @param <P> request param extending {@link Enum} and {@link RequestParamType}
      */
-    public static <P extends Enum<P> & RequestParamType> EnumMap<P, String> convert(
+    public static <P extends Enum<P> & RequestParamType> Map<P, String> convert(
             final Class<P> enumClass, Map<String, String> sourceParams) {
         return sourceParams.entrySet().stream()
                 .map(entry -> mapToEnumEntry(enumClass, entry))
