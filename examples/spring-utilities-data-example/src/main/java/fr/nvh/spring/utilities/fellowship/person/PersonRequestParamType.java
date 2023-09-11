@@ -215,8 +215,14 @@ import lombok.NonNull;
 
 import java.util.Set;
 
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.*;
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.*;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.CONTAINING;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.GREATER_OR_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.LESS_OR_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.NOT_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_EXCLUDED;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_INCLUDED;
 
 public enum PersonRequestParamType implements RequestParamType {
     FILTER(null, OVER_SEARCH, CONTAINING, "filter", "filtre"),

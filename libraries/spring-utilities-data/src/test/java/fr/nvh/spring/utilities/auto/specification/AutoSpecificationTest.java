@@ -206,7 +206,11 @@
 
 package fr.nvh.spring.utilities.auto.specification;
 
-import fr.nvh.spring.utilities.auto.specification.spring.*;
+import fr.nvh.spring.utilities.auto.specification.spring.TestApplication;
+import fr.nvh.spring.utilities.auto.specification.spring.TestEntity;
+import fr.nvh.spring.utilities.auto.specification.spring.TestEntityBuilder;
+import fr.nvh.spring.utilities.auto.specification.spring.TestEntityRepository;
+import fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -222,8 +226,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.*;
-import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.*;
+import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.MAX_NUMBER_VALUE;
+import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.MIN_NUMBER_VALUE;
+import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.NOT_EXISTING_STRING_VALUE;
+import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.TEST_ENTITY_COUNT;
+import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.TOO_BIG_INTEGER_VALUE;
+import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.TOO_SMALL_INTEGER_VALUE;
+import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.ANOTHER_STRING_CONTAINING;
+import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.ANOTHER_STRING_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.GLOBAL_CONTAINING;
+import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.GLOBAL_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.NUMBER_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.NUMBER_GREATER;
+import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.NUMBER_GREATER_OR_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.NUMBER_LESS;
+import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.NUMBER_LESS_OR_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.NUMBER_NOT_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.STRING_CONTAINING;
+import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.STRING_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.STRING_LIKE;
+import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.STRING_NOT_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.STRING_NOT_LIKE;
 
 @ExtendWith(SpringExtension.class)
 @Import(value = {TestApplication.class})

@@ -211,8 +211,18 @@ import fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator;
 import fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType;
 import lombok.NonNull;
 
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.*;
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.*;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.CONTAINING;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.GREATER;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.GREATER_OR_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.LESS;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.LESS_OR_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.LIKE;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.NOT_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.NOT_LIKE;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_EXCLUDED;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_INCLUDED;
 
 public enum TestEntityRequestParamType implements RequestParamType {
     GLOBAL_CONTAINING(null, OVER_SEARCH, CONTAINING),

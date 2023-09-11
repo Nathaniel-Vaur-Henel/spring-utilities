@@ -212,7 +212,9 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static fr.nvh.spring.utilities.fellowship.person.TestConstants.*;
+import static fr.nvh.spring.utilities.fellowship.person.TestConstants.EMAIL;
+import static fr.nvh.spring.utilities.fellowship.person.TestConstants.FIRST_NAME;
+import static fr.nvh.spring.utilities.fellowship.person.TestConstants.LAST_NAME;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PersonBuilder {

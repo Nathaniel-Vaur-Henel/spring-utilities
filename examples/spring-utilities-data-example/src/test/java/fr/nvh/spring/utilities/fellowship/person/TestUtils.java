@@ -209,7 +209,6 @@ package fr.nvh.spring.utilities.fellowship.person;
 public class TestUtils {
     static boolean notNullAndContains(String value, String searchedValue) {
         boolean b = value != null && value.contains(searchedValue);
-        System.out.println(value + "/" + searchedValue + "=>" + b);
         return b;
     }
 

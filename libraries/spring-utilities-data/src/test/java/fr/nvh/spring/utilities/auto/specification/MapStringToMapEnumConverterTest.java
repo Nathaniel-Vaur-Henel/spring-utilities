@@ -214,7 +214,10 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.*;
+import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.NOT_EXISTING_PARAM;
+import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.VALUE_1;
+import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.VALUE_2;
+import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.VALUE_3;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MapStringToMapEnumConverterTest {
