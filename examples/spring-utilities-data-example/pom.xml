@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>fr.nvh.spring-utilities</groupId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <artifactId>spring-utilities-data-example</artifactId>
 
     <properties>
