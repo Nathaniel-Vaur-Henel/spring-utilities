@@ -221,7 +221,7 @@ import java.util.stream.Collectors;
  * {@link Map}<{@link RequestParamType}, String>.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class MapStringToMapEnumConverter {
+public final class MapStringToMapEnumConverter {
 
     /**
      * Convert a {@link Map}<String, String> to an {@link EnumMap}<<code>P</code>, String> according to

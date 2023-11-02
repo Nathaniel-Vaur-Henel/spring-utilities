@@ -72,3 +72,34 @@ It's just some ideas. Maybe implemented sometime. Feel free to contribute.
 - [ ] add throw exception if no params (configurable)
 - [ ] handle join
 - [ ] add an over search with additional params (the new over search type will search in email, firstname and lastname, but you can add a param to search on age)
+
+## TestUtils
+
+### Summary
+
+The class [TestUtils.java](src/test/java/fr/nvh/spring/utilities/TestUtils.java) contains some methods to help you to test your code.
+
+### Detailed
+
+#### `assertThatIsUtilityClass`
+
+This method help you to assert that a class is a utility class. A utility class is a class with only static methods and a private constructor. This constructor is usually empty, but it's not mandatory, it can be used to throw an exception for example.
+
+```java
+final class MyUtilityClass {
+
+  private MyUtilityClass() {
+    //   throw new UnsupportedOperationException("Utility class");// optional
+  }
+
+  static void someUtilMethod() {
+    // ...
+  }
+
+}
+```
+
+### To do
+
+- create a module for other test utils to be used in other projects.
+- add some methods for tests. 

@@ -204,125 +204,50 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification;
+package fr.nvh.spring.utilities;
 
-import fr.nvh.spring.utilities.TestUtils;
-import fr.nvh.spring.utilities.auto.specification.commons.DefaultRequestParamType;
-import fr.nvh.spring.utilities.auto.specification.commons.ParamNameRequestParamType;
-import fr.nvh.spring.utilities.auto.specification.commons.SetRequestParamType;
-import org.junit.jupiter.api.Test;
+import lombok.extern.java.Log;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 
-import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.NOT_EXISTING_PARAM;
-import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.VALUE_1;
-import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.VALUE_2;
-import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.VALUE_3;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MapStringToMapEnumConverterTest {
-    @Test
-    void assert_that_is_utility_class() throws Exception {
-        TestUtils.assertThatIsUtilityClass(MapStringToMapEnumConverter.class);
-    }
+@Log
+public class TestUtils {
+    public static void assertThatIsUtilityClass(Class<?> utilityClass) throws ReflectiveOperationException {
+        Constructor<?>[] constructors = utilityClass.getDeclaredConstructors();
+        assertThat(constructors)
+            .as("Utility class should only have one constructor")
+            .hasSize(1);
+        Constructor<?> privateConstructor = constructors[0];
+        assertThat(privateConstructor.canAccess(null))
+            .as("Utility class should only have one private constructor")
+            .isFalse();
 
-    @Test
-    void convert_param_using_default_argument_name_should_works() {
-        // given
-        var params = new HashMap<String, String>();
-        params.put(DefaultRequestParamType.PARAM_1.fieldName(), VALUE_1);
-        params.put(DefaultRequestParamType.PARAM_2.fieldName(), VALUE_2);
-        params.put(NOT_EXISTING_PARAM, VALUE_3);
+        try {
+            // Make the constructor accessible and use it to create the utility class for coverage.
+            privateConstructor.setAccessible(true);
+            Object newInstance = privateConstructor.newInstance();
+            assertThat(newInstance).isExactlyInstanceOf(utilityClass);
+        } catch (InvocationTargetException e) {
+            log.info("Utility class annotation instanciation may throw Exception: "
+                + e.getTargetException().getClass() + " - "
+                + e.getTargetException().getMessage());
+        } finally {
+            privateConstructor.setAccessible(false);
+        }
 
-        // when
-        var converted = MapStringToMapEnumConverter.convert(DefaultRequestParamType.class, params);
+        // Make sure the utility class is final.
+        assertThat(Modifier.isFinal(utilityClass.getModifiers()))
+            .as("Utility class should be final")
+            .isTrue();
 
-        // then
-        assertThat(converted)
-            .hasSize(2)
-            .containsEntry(DefaultRequestParamType.PARAM_1, VALUE_1)
-            .containsEntry(DefaultRequestParamType.PARAM_2, VALUE_2);
-    }
-
-    @Test
-    void convert_param_using_specified_argument_name_should_works() {
-        // given
-        var params = new HashMap<String, String>();
-        params.put(ParamNameRequestParamType.NAMED_PARAM_1.argumentName(), VALUE_1);
-        params.put(ParamNameRequestParamType.NAMED_PARAM_2.argumentName(), VALUE_2);
-        params.put(NOT_EXISTING_PARAM, VALUE_3);
-
-        // when
-        var converted = MapStringToMapEnumConverter.convert(ParamNameRequestParamType.class, params);
-
-        // then
-        assertThat(converted)
-            .hasSize(2)
-            .containsEntry(ParamNameRequestParamType.NAMED_PARAM_1, VALUE_1)
-            .containsEntry(ParamNameRequestParamType.NAMED_PARAM_2, VALUE_2);
-    }
-
-    @Test
-    void convert_param_using_set_argument_names_should_works() {
-        // given
-        var params = new HashMap<String, String>();
-        params.put("filter", VALUE_1);
-        params.put("some_cases", VALUE_2);
-        params.put(NOT_EXISTING_PARAM, VALUE_3);
-
-        // when
-        var converted = MapStringToMapEnumConverter.convert(SetRequestParamType.class, params);
-
-        // then
-        assertThat(converted)
-            .hasSize(2)
-            .containsEntry(SetRequestParamType.FILTER, VALUE_1)
-            .containsEntry(SetRequestParamType.SOME_CASES, VALUE_2);
-    }
-
-    @Test
-    void convert_param_using_another_set_argument_names_should_works() {
-        // given
-        var params = new HashMap<String, String>();
-        params.put("filtre", VALUE_1);
-        params.put("someCases", VALUE_2);
-        params.put(NOT_EXISTING_PARAM, VALUE_3);
-
-        // when
-        var converted = MapStringToMapEnumConverter.convert(SetRequestParamType.class, params);
-
-        // then
-        assertThat(converted)
-            .hasSize(2)
-            .containsEntry(SetRequestParamType.FILTER, VALUE_1)
-            .containsEntry(SetRequestParamType.SOME_CASES, VALUE_2);
-    }
-
-    @Test
-    void convert_param_linked_same_criteria_should_works() {
-        // given
-        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("filtre", VALUE_1);
-        params.put("filter", VALUE_2);
-
-        // when
-        var converted = MapStringToMapEnumConverter.convert(SetRequestParamType.class, params);
-
-        // then
-        assertThat(converted).hasSize(1).containsEntry(SetRequestParamType.FILTER, VALUE_1);
-    }
-
-    @Test
-    void unknown_value_is_ignored_without_failure() {
-        // given
-        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put(NOT_EXISTING_PARAM, VALUE_1);
-
-        // when
-        var converted = MapStringToMapEnumConverter.convert(SetRequestParamType.class, params);
-
-        // then
-        assertThat(converted).isEmpty();
+        Arrays.stream(utilityClass.getDeclaredMethods())
+            .forEach(method -> assertThat(Modifier.isStatic(method.getModifiers()))
+                .as("Utility class should have only static methods. '%s' is not static", method.getName())
+                .isTrue());
     }
 }
