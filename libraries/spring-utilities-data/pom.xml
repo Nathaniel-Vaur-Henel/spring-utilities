@@ -6,15 +6,15 @@
     <parent>
         <groupId>fr.nvh.spring-utilities</groupId>
         <artifactId>spring-utilities</artifactId>
-        <version>1.0.1</version>
+        <version>1.1.0</version>
     </parent>
 
     <artifactId>spring-utilities-data</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 
     <properties>
-        <maven.compiler.source>20</maven.compiler.source>
-        <maven.compiler.target>20</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit-jupiter.version>5.9.3</junit-jupiter.version>
         <pitest.version>1.14.2</pitest.version>
@@ -100,6 +100,9 @@
                     <targetTests>
                         <param>fr.nvh.spring.utilities.auto.specification.*</param>
                     </targetTests>
+                    <excludedClasses>
+                        <param>fr.nvh.spring.utilities.conf.H2DatabaseLogConfiguration</param>
+                    </excludedClasses>
                 </configuration>
             </plugin>
 

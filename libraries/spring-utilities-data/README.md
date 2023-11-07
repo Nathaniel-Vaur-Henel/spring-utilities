@@ -73,6 +73,50 @@ It's just some ideas. Maybe implemented sometime. Feel free to contribute.
 - [ ] handle join
 - [ ] add an over search with additional params (the new over search type will search in email, firstname and lastname, but you can add a param to search on age)
 
+## H2 database utilities
+
+### Summary
+
+- Add `spring-utilities-data` dependency to your project,
+- Add `spring.utilities.database.log.enabled=true` to your `application.properties` file,
+- Start your application,
+- And get the result!
+
+Simple example available at [spring-utilities-data-example](../../examples/spring-utilities-data-example).
+Especially to [application.properties](../../examples/spring-utilities-data-example/src/main/resources/application.properties).
+
+### Detailed
+
+#### H2 database
+
+It's a convenient util to easily enhance startup log of H2 database.
+If you activate H2 console and spring-utilities database logs in your to your `application.properties` file with :
+
+```properties
+# default value 'false', mandatory to activate H2 console
+spring.h2.console.enabled=true
+# default value 'false', mandatory to activate this H2 console log
+spring.utilities.database.log.enabled=true
+# default value 'localhost', optional to change H2 console url in log
+spring.utilities.database.log.domain=127.0.0.1
+```
+
+You will get a startup log like this :
+
+```text
+Path to local H2 console: http://127.0.0.1:8080/h2-console ; with JDBC URL= 'jdbc:h2:mem:fellowship_of_the_ring' ; with user= 'JRRT'
+```
+
+Notes :
+- This example is based on [spring-utilities-data-example](../../examples/spring-utilities-data-example) project. If you run it, you will see the log.
+- Using H2 database, the console port is relative to the server port. So, if you change the server port, the H2 console port will change too.
+- 🏆 _The configuration is loaded only if your have load the H2 database driver
+with `spring.datasource.driver-class-name=org.h2.Driver` in your `application.properties` or `.yaml` file._
+
+### To do
+
+- [X] nothing for now :)
+
 ## TestUtils
 
 ### Summary
@@ -101,5 +145,5 @@ final class MyUtilityClass {
 
 ### To do
 
-- create a module for other test utils to be used in other projects.
-- add some methods for tests. 
+- [ ] create a module for other test utils to be used in other projects.
+- [ ] add some methods for tests. 
