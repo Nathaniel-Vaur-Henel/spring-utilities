@@ -204,19 +204,140 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.param;
+package fr.nvh.spring.utilities;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
-/**
- * This class permits to build a {@link Predicate} with {@link SpecificationOperator#LESS_OR_EQUAL}.
- */
-class PredicateFilterBuilderLessOrEqual implements PredicateFilterBuilder {
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
+@RequiredArgsConstructor
+public class Result<T> implements List<T> {
+
+    private final List<T> data;
+
     @Override
-    public <T extends RequestParamType> Predicate buildPredicate(
-            T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
-        return builder.lessThanOrEqualTo(buildPath(root, filter.fieldName()), searchValue);
+    public String toString() {
+        return data.size() + " " + data;
     }
+
+    @Override
+    public int size() {
+        return data.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return data.isEmpty();
+    }
+
+    @Override
+    public boolean contains(Object o) {
+        return data.contains(o);
+    }
+
+    @Override
+    public @NonNull Iterator<T> iterator() {
+        return data.iterator();
+    }
+
+    @Override
+    public Object @NonNull [] toArray() {
+        return data.toArray();
+    }
+
+    @Override
+    public <T1> T1 @NonNull [] toArray(T1 @NonNull [] a) {
+        return data.toArray(a);
+    }
+
+    @Override
+    public boolean add(T t) {
+        return data.add(t);
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        return data.remove(o);
+    }
+
+    @SuppressWarnings("SlowListContainsAll")
+    @Override
+    public boolean containsAll(@NonNull Collection<?> c) {
+        return data.containsAll(c);
+    }
+
+    @Override
+    public boolean addAll(@NonNull Collection<? extends T> c) {
+        return data.addAll(c);
+    }
+
+    @Override
+    public boolean addAll(int index, @NonNull Collection<? extends T> c) {
+        return data.addAll(index, c);
+    }
+
+    @Override
+    public boolean removeAll(@NonNull Collection<?> c) {
+        return data.removeAll(c);
+    }
+
+    @Override
+    public boolean retainAll(@NonNull Collection<?> c) {
+        return data.retainAll(c);
+    }
+
+    @Override
+    public void clear() {
+        data.clear();
+    }
+
+    @Override
+    public T get(int index) {
+        return data.get(index);
+    }
+
+    @Override
+    public T set(int index, T element) {
+        return data.set(index, element);
+    }
+
+    @Override
+    public void add(int index, T element) {
+        data.add(index, element);
+    }
+
+    @Override
+    public T remove(int index) {
+        return data.remove(index);
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        return data.indexOf(o);
+    }
+
+    @Override
+    public int lastIndexOf(Object o) {
+        return data.lastIndexOf(o);
+    }
+
+    @Override
+    public @NonNull ListIterator<T> listIterator() {
+        return data.listIterator();
+    }
+
+    @Override
+    public @NonNull ListIterator<T> listIterator(int index) {
+        return data.listIterator(index);
+    }
+
+    @Override
+    public @NonNull List<T> subList(int fromIndex, int toIndex) {
+        return data.subList(fromIndex, toIndex);
+    }
+
 }

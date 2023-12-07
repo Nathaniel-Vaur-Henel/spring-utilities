@@ -204,19 +204,36 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.param;
+package fr.nvh.spring.utilities;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import fr.nvh.spring.utilities.fellowship.item.ItemRepository;
+import jakarta.transaction.Transactional;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-/**
- * This class permits to build a {@link Predicate} with {@link SpecificationOperator#LESS_OR_EQUAL}.
- */
-class PredicateFilterBuilderLessOrEqual implements PredicateFilterBuilder {
-    @Override
-    public <T extends RequestParamType> Predicate buildPredicate(
-            T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
-        return builder.lessThanOrEqualTo(buildPath(root, filter.fieldName()), searchValue);
+@ExtendWith(SpringExtension.class) // Pour JUnit 4, utilisez @ExtendWith pour JUnit 5
+@SpringBootTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
+@Slf4j
+@NoArgsConstructor
+class ItemRepositoryExampleTest {
+
+    @Setter
+    @Autowired
+    private ItemRepository itemRepository;
+
+    @Test
+    void name() {
+        log.info("test{}", itemRepository.findAll());
+
     }
+
 }

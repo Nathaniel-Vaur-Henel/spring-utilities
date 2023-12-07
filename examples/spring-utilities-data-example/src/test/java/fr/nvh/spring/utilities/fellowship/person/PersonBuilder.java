@@ -206,10 +206,10 @@
 
 package fr.nvh.spring.utilities.fellowship.person;
 
+import fr.nvh.spring.utilities.Result;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.stream.IntStream;
 
 import static fr.nvh.spring.utilities.fellowship.person.TestConstants.EMAIL;
@@ -228,7 +228,7 @@ public class PersonBuilder {
         return person;
     }
 
-    public static List<PersonEntity> buildPersons(int count) {
-        return IntStream.range(0, count).mapToObj(PersonBuilder::buildPerson).toList();
+    public static Result<PersonEntity> buildPersons(int count) {
+        return new Result<>(IntStream.range(0, count).mapToObj(PersonBuilder::buildPerson).toList());
     }
 }

@@ -206,6 +206,7 @@
 
 package fr.nvh.spring.utilities.fellowship.person;
 
+import fr.nvh.spring.utilities.Result;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -213,7 +214,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -227,7 +227,7 @@ public class PersonController {
     private final PersonFindAllUseCase personFindAllUseCase;
 
     @GetMapping
-    public List<PersonEntity> getAllPersons(@RequestParam Map<String, String> params) {
+    public Result<PersonEntity> getAllPersons(@RequestParam Map<String, String> params) {
         log.info("GET /api/v1/persons called with {}", params);
 
         return personFindAllUseCase.convertAndFindAll(params);

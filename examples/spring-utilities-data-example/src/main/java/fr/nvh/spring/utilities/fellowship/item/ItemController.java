@@ -204,19 +204,32 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.param;
+package fr.nvh.spring.utilities.fellowship.item;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import fr.nvh.spring.utilities.Result;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 /**
- * This class permits to build a {@link Predicate} with {@link SpecificationOperator#LESS_OR_EQUAL}.
+ * Simple example controller to test {@link fr.nvh.spring.utilities.auto.specification.AutoSpecification}
  */
-class PredicateFilterBuilderLessOrEqual implements PredicateFilterBuilder {
-    @Override
-    public <T extends RequestParamType> Predicate buildPredicate(
-            T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
-        return builder.lessThanOrEqualTo(buildPath(root, filter.fieldName()), searchValue);
+@Slf4j
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/v1/items")
+public class ItemController {
+    private final ItemFindAllUseCase itemFindAllUseCase;
+
+    @GetMapping
+    public Result<ItemEntity> getAllItems(@RequestParam Map<String, String> params) {
+        log.info("GET /api/v1/items called with {}", params);
+
+        return itemFindAllUseCase.convertAndFindAll(params);
     }
 }

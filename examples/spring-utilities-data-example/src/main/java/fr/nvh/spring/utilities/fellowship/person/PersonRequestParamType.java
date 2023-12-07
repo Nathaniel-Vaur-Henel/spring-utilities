@@ -231,7 +231,8 @@ public enum PersonRequestParamType implements RequestParamType {
     EMAIL("email", OVER_SEARCH_INCLUDED, CONTAINING, "email"),
     CONTAINING_AGE("age", OVER_SEARCH_EXCLUDED, NOT_EQUAL, "test"),
     MIN_AGE("age", OVER_SEARCH_EXCLUDED, GREATER_OR_EQUAL, "min_age", "minAge"),
-    MAX_AGE("age", OVER_SEARCH_EXCLUDED, LESS_OR_EQUAL, "max_age", "maxAge");
+    MAX_AGE("age", OVER_SEARCH_EXCLUDED, LESS_OR_EQUAL, "max_age", "maxAge"),
+    HAS("items.name", OVER_SEARCH_EXCLUDED, EQUAL, "has");
 
     private final String fieldName;
     private final SpecificationParamType paramType;

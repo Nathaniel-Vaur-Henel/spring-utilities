@@ -207,9 +207,12 @@
 package fr.nvh.spring.utilities.auto.specification.param;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.util.Arrays;
 
 /**
  * This interface represents how to build a {@link Predicate} for the {@link Specification} from
@@ -229,4 +232,14 @@ interface PredicateFilterBuilder {
      */
     <T extends RequestParamType> Predicate buildPredicate(
             T filter, Root<?> root, CriteriaBuilder builder, String searchValue);
+
+    default Path<String> buildPath(Root<?> root, String fieldName) {
+        if (!fieldName.contains(".")) {
+            return root.get(fieldName);
+        }
+
+        String[] fieldNames = fieldName.split("\\.");
+        return Arrays.stream(fieldNames, 1, fieldNames.length)
+            .reduce(root.get(fieldNames[0]), Path::get, (a, b) -> b);
+    }
 }

@@ -204,19 +204,65 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.param;
+package fr.nvh.spring.utilities.fellowship.item;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import fr.nvh.spring.utilities.auto.specification.param.RequestParamType;
+import fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator;
+import fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType;
+import lombok.NonNull;
 
-/**
- * This class permits to build a {@link Predicate} with {@link SpecificationOperator#LESS_OR_EQUAL}.
- */
-class PredicateFilterBuilderLessOrEqual implements PredicateFilterBuilder {
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.CONTAINING;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.GREATER_OR_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.LESS_OR_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.NOT_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_EXCLUDED;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_INCLUDED;
+
+public enum ItemRequestParamType implements RequestParamType {
+    OWNER_FILTER(null, OVER_SEARCH, CONTAINING),
+    OWNER_FIRST_NAME("owner.firstName", OVER_SEARCH_INCLUDED, EQUAL),
+    OWNER_LAST_NAME("owner.lastName", OVER_SEARCH_INCLUDED, EQUAL),
+    OWNER_EMAIL("owner.email", OVER_SEARCH_INCLUDED, CONTAINING),
+    OWNER_CONTAINING_AGE(Constants.OWNER_AGE, OVER_SEARCH_EXCLUDED, NOT_EQUAL),
+    OWNER_MIN_AGE(Constants.OWNER_AGE, OVER_SEARCH_EXCLUDED, GREATER_OR_EQUAL),
+    OWNER_MAX_AGE(Constants.OWNER_AGE, OVER_SEARCH_EXCLUDED, LESS_OR_EQUAL),
+
+    ITEM_NAME("name", OVER_SEARCH_EXCLUDED, EQUAL),
+    ;
+    private final String fieldName;
+    private final SpecificationParamType paramType;
+    private final SpecificationOperator operator;
+
+    ItemRequestParamType(
+        String fieldName,
+        SpecificationParamType paramType,
+        SpecificationOperator operator) {
+        this.fieldName = fieldName;
+        this.paramType = paramType;
+        this.operator = operator;
+    }
+
+    @NonNull
     @Override
-    public <T extends RequestParamType> Predicate buildPredicate(
-            T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
-        return builder.lessThanOrEqualTo(buildPath(root, filter.fieldName()), searchValue);
+    public String fieldName() {
+        return fieldName;
+    }
+
+    @NonNull
+    @Override
+    public SpecificationParamType paramType() {
+        return paramType;
+    }
+
+    @NonNull
+    @Override
+    public SpecificationOperator operator() {
+        return operator;
+    }
+
+    private interface Constants {
+        String OWNER_AGE = "owner.age";
     }
 }

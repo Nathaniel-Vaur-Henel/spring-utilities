@@ -204,19 +204,44 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.param;
+package fr.nvh.spring.utilities;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import fr.nvh.spring.utilities.fellowship.person.PersonEntity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
 
 /**
- * This class permits to build a {@link Predicate} with {@link SpecificationOperator#LESS_OR_EQUAL}.
+ * Simple entity to do test.
  */
-class PredicateFilterBuilderLessOrEqual implements PredicateFilterBuilder {
+@Table(name = "saraband")
+@Entity
+@Setter
+@Getter
+public class SarabandEntity implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @OneToOne
+    private PersonEntity leftHand;
+    @OneToOne
+    private PersonEntity rightHand;
+
     @Override
-    public <T extends RequestParamType> Predicate buildPredicate(
-            T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
-        return builder.lessThanOrEqualTo(buildPath(root, filter.fieldName()), searchValue);
+    public String toString() {
+        return who(leftHand) + " on the left and " + who(rightHand) + " on the right";
+    }
+
+    private String who(PersonEntity person) {
+        return person == null ? "nobody" : person.toString();
     }
 }

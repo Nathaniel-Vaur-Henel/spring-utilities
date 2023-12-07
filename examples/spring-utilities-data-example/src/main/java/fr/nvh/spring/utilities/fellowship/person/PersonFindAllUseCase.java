@@ -206,11 +206,11 @@
 
 package fr.nvh.spring.utilities.fellowship.person;
 
+import fr.nvh.spring.utilities.Result;
 import fr.nvh.spring.utilities.auto.specification.MapStringToMapEnumConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 
 @Component
@@ -218,12 +218,12 @@ import java.util.Map;
 public class PersonFindAllUseCase {
     private final PersonRepository personRepository;
 
-    public List<PersonEntity> findAll(Map<PersonRequestParamType, String> typedParams) {
+    public Result<PersonEntity> findAll(Map<PersonRequestParamType, String> typedParams) {
         PersonSpecification personSpecification = new PersonSpecification(typedParams);
-        return personRepository.findAll(personSpecification);
+        return new Result<>(personRepository.findAll(personSpecification));
     }
 
-    public List<PersonEntity> convertAndFindAll(Map<String, String> params) {
+    public Result<PersonEntity> convertAndFindAll(Map<String, String> params) {
         return findAll(convert(params));
     }
 

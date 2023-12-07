@@ -204,19 +204,30 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.param;
+package fr.nvh.spring.utilities.fellowship.item;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import fr.nvh.spring.utilities.Result;
+import fr.nvh.spring.utilities.auto.specification.MapStringToMapEnumConverter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-/**
- * This class permits to build a {@link Predicate} with {@link SpecificationOperator#LESS_OR_EQUAL}.
- */
-class PredicateFilterBuilderLessOrEqual implements PredicateFilterBuilder {
-    @Override
-    public <T extends RequestParamType> Predicate buildPredicate(
-            T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
-        return builder.lessThanOrEqualTo(buildPath(root, filter.fieldName()), searchValue);
+import java.util.Map;
+
+@Component
+@RequiredArgsConstructor
+public class ItemFindAllUseCase {
+    private final ItemRepository itemRepository;
+
+    public Result<ItemEntity> findAll(Map<ItemRequestParamType, String> typedParams) {
+        ItemSpecification itemSpecification = new ItemSpecification(typedParams);
+        return new Result<>(itemRepository.findAll(itemSpecification));
+    }
+
+    public Result<ItemEntity> convertAndFindAll(Map<String, String> params) {
+        return findAll(convert(params));
+    }
+
+    private static Map<ItemRequestParamType, String> convert(Map<String, String> params) {
+        return MapStringToMapEnumConverter.convert(ItemRequestParamType.class, params);
     }
 }

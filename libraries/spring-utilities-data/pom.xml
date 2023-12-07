@@ -15,6 +15,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <maven.plugin.validation>VERBOSE</maven.plugin.validation>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit-jupiter.version>5.9.3</junit-jupiter.version>
         <pitest.version>1.14.2</pitest.version>

@@ -215,6 +215,6 @@ class PredicateFilterBuilderNotLike implements PredicateFilterBuilder {
     @Override
     public <T extends RequestParamType> Predicate buildPredicate(
             T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
-        return builder.notLike(root.get(filter.fieldName()), searchValue);
+        return builder.notLike(buildPath(root, filter.fieldName()), searchValue);
     }
 }

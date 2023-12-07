@@ -204,19 +204,69 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.param;
+package fr.nvh.spring.utilities;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import fr.nvh.spring.utilities.fellowship.person.PersonFindAllUseCase;
+import fr.nvh.spring.utilities.fellowship.person.PersonRepository;
+import fr.nvh.spring.utilities.fellowship.person.PersonRequestParamType;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 
-/**
- * This class permits to build a {@link Predicate} with {@link SpecificationOperator#LESS_OR_EQUAL}.
- */
-class PredicateFilterBuilderLessOrEqual implements PredicateFilterBuilder {
-    @Override
-    public <T extends RequestParamType> Predicate buildPredicate(
-            T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
-        return builder.lessThanOrEqualTo(buildPath(root, filter.fieldName()), searchValue);
+import java.util.EnumMap;
+import java.util.Map;
+
+@Slf4j
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+public class PersonRepositoryExample {
+    static void testAndLog(ApplicationContext applicationContext) {
+        log.info("***** {} *****", PersonRepositoryExample.class.getSimpleName());
+        PersonRepository personRepository = applicationContext.getBean(PersonRepository.class);
+        log.info("The full fellowship: {} {}", personRepository.count(), personRepository.findAll());
+        // Expected: The full fellowship: 9 [Gandalf The Grey, Aragorn, Boromir, Legolas, Gimli, Frodo
+        // Baggins, Samwise Gamegee, Meriadoc Brandybuck, Peregrin Took]
+
+        PersonFindAllUseCase personFindAllUseCase = applicationContext.getBean(PersonFindAllUseCase.class);
+        Map<PersonRequestParamType, String> noParams = new EnumMap<>(PersonRequestParamType.class);
+        log.info("The full fellowship again: {}", personFindAllUseCase.findAll(noParams));
+        // Expected: The full fellowship again: 9 [Gandalf The Grey, Aragorn, Boromir, Legolas, Gimli,
+        // Frodo Baggins, Samwise Gamegee, Meriadoc Brandybuck, Peregrin Took]
+
+        Map<PersonRequestParamType, String> theShire = new EnumMap<>(PersonRequestParamType.class);
+        theShire.put(PersonRequestParamType.FILTER, "theshire");
+        log.info("The Shire: {}", personFindAllUseCase.findAll(theShire));
+        // Expected: The Shire: 4 [Frodo Baggins, Samwise Gamegee, Meriadoc Brandybuck, Peregrin Took]
+
+        Map<PersonRequestParamType, String> erebor = new EnumMap<>(PersonRequestParamType.class);
+        erebor.put(PersonRequestParamType.EMAIL, "erebor");
+        log.info("Erebor: {}", personFindAllUseCase.findAll(erebor));
+        // Expected: The Shire: 1 [Gimli]
+
+        Map<PersonRequestParamType, String> boromir = new EnumMap<>(PersonRequestParamType.class);
+        boromir.put(PersonRequestParamType.FIRST_NAME, "Boromir");
+        log.info("Boromir: {}", personFindAllUseCase.findAll(boromir));
+        // Expected: Boromir: 1 [Boromir]
+
+        Map<PersonRequestParamType, String> theNoLastNamed = new EnumMap<>(PersonRequestParamType.class);
+        theNoLastNamed.put(PersonRequestParamType.LAST_NAME, null);
+        log.info("They have no last name: 4 {}", personFindAllUseCase.findAll(theNoLastNamed));
+        // Expected: They have no last name: [Aragorn, Boromir, Legolas, Gimli]
+
+        Map<PersonRequestParamType, String> theHundredYearOld = new EnumMap<>(PersonRequestParamType.class);
+        theHundredYearOld.put(PersonRequestParamType.MIN_AGE, "100");
+        theHundredYearOld.put(PersonRequestParamType.MAX_AGE, "200");
+        log.info("The hundred-year-old: {}", personFindAllUseCase.findAll(theHundredYearOld));
+        // Expected: The hundred-year-old:1  [Gimli]
+
+        Map<PersonRequestParamType, String> theThousandYearOld = new EnumMap<>(PersonRequestParamType.class);
+        theThousandYearOld.put(PersonRequestParamType.MIN_AGE, "1000");
+        log.info("The thousand-year-old and more: {}", personFindAllUseCase.findAll(theThousandYearOld));
+        // Expected: The thousand-year-old and more: 2 [Gandalf The Grey, Legolas]
+
+
+        Map<PersonRequestParamType, String> daggerOwnersParams = new EnumMap<>(PersonRequestParamType.class);
+        daggerOwnersParams.put(PersonRequestParamType.HAS, "Dagger");
+        log.info("Dagger owners: {}", personFindAllUseCase.findAll(daggerOwnersParams));
+        // Expected: Dagger owners: 2 [Meriadoc Brandybuck, Peregrin Took]
     }
 }
