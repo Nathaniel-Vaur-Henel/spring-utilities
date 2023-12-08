@@ -213,10 +213,10 @@ import jakarta.persistence.criteria.Root;
 /**
  * This class permits to build a {@link Predicate} with {@link SpecificationOperator#GREATER_OR_EQUAL}.
  */
-class PredicateFilterBuilderGreaterOrEqual implements PredicateFilterBuilder {
+class PredicateFilterBuilderGreaterOrEqual extends PredicateFilterBuilder {
     @Override
     public <T extends RequestParamType> Predicate buildPredicate(
             T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
-        return builder.greaterThanOrEqualTo(root.get(filter.fieldName()), searchValue);
+        return builder.greaterThanOrEqualTo(buildPath(root, filter.fieldName()), searchValue);
     }
 }

@@ -27,7 +27,7 @@ Instead of `enum`, you can create a `class` with instanced objects, but it's not
 First, you need to create an `enum` implementing [RequestParamType](src/main/java/fr/nvh/spring/utilities/auto/specification/param/RequestParamType.java).
 You can find a complete example in [PersonRequestParamType](../../examples/spring-utilities-data-example/src/main/java/fr/nvh/spring/utilities/fellowship/person/PersonRequestParamType.java).
 
-- `filedName()` must return the entity field name, not the SQL field name. It can be null only for `OVER_SEARCH` [SpecificationParamType](src/main/java/fr/nvh/spring/utilities/auto/specification/param/SpecificationParamType.java),
+- `fieldName()` must return the entity field name, not the SQL field name. It can be null only for `OVER_SEARCH` [SpecificationParamType](src/main/java/fr/nvh/spring/utilities/auto/specification/param/SpecificationParamType.java),
 - `paramType()` must return a [SpecificationParamType](src/main/java/fr/nvh/spring/utilities/auto/specification/param/SpecificationParamType.java) to describe the behaviour of your param, can not be null,
 - `operator()` must return a [SpecificationOperator](src/main/java/fr/nvh/spring/utilities/auto/specification/param/SpecificationOperator.java) to link your param to a SQL operator, can not be null,
 - `isArgumentName()` return `true` if the param is link to the enum value, `false` otherwise. You can use a simple `String`, or a `Set` if you want handle several writings for a parameter,
@@ -50,11 +50,18 @@ To finish, you have just to :
 - And get the result ! 👍
 - If you want to add some new params, just add lines in your [RequestParamType](src/main/java/fr/nvh/spring/utilities/auto/specification/param/RequestParamType.java) enum.
 
+### Nice features
+
+#### Auto subquery
+
+In [RequestParamType](src/main/java/fr/nvh/spring/utilities/auto/specification/param/RequestParamType.java) you can use a `.` separator in your `fieldName()` to use a subquery automatically. 
+You can find a complete example in [ItemRequestParamType.java](../../examples/spring-utilities-data-example/src/main/java/fr/nvh/spring/utilities/fellowship/item/ItemRequestParamType.java)
+
 ### To do
 
 It's just some ideas. Maybe implemented sometime. Feel free to contribute.
 
-- [ ] handle `.` in fieldName
+- [x] handle `.` in fieldName
 - [ ] add a `Get Started`
 - [ ] add a param type for params in over search not accessible by params name
 - [ ] add contributing guideline and code of conduct.

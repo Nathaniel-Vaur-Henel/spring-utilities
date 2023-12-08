@@ -211,10 +211,10 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
 /** This class permits to build a {@link Predicate} with {@link SpecificationOperator#NOT_LIKE}. */
-class PredicateFilterBuilderNotLike implements PredicateFilterBuilder {
+class PredicateFilterBuilderNotLike extends PredicateFilterBuilder {
     @Override
     public <T extends RequestParamType> Predicate buildPredicate(
             T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
-        return builder.notLike(root.get(filter.fieldName()), searchValue);
+        return builder.notLike(buildPath(root, filter.fieldName()), searchValue);
     }
 }

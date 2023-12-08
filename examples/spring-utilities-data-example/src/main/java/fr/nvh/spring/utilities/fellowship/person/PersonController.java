@@ -227,7 +227,7 @@ public class PersonController {
     private final PersonFindAllUseCase personFindAllUseCase;
 
     @GetMapping
-    public List<PersonEntity> getAllPersons(@RequestParam Map<String, String> params) {
+    public List<PersonDto> getAllPersons(@RequestParam Map<String, String> params) {
         log.info("GET /api/v1/persons called with {}", params);
 
         return personFindAllUseCase.convertAndFindAll(params);

@@ -204,36 +204,29 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities.fellowship.item;
 
-import org.junit.jupiter.api.Test;
+import fr.nvh.spring.utilities.WrappedListWithSize;
+import fr.nvh.spring.utilities.fellowship.TestConstants;
+import fr.nvh.spring.utilities.fellowship.person.PersonEntity;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.stream.IntStream;
 
-class PersonEntityTest {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class ItemBuilder {
 
-    @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
-
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
+    public static ItemEntity buildItem(int number, PersonEntity person) {
+        var item = new ItemEntity();
+        item.setName(TestConstants.ITEM_NAME + number);
+        item.setOwner(person);
+        return item;
     }
 
-    @Test
-    void toString_with_firstName_should_return_firstName() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
+    public static WrappedListWithSize<ItemEntity> buildItems(int count, PersonEntity person) {
+        return new WrappedListWithSize<>(IntStream.range(0, count)
+                .mapToObj((int number) -> buildItem(number, person))
+                .toList());
     }
 }
