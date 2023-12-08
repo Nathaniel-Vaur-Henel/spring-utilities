@@ -206,17 +206,21 @@
 
 package fr.nvh.spring.utilities.fellowship.person;
 
+import fr.nvh.spring.utilities.fellowship.item.ItemEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 
 /** Simple entity to do test. */
 @Table(name = "person")
@@ -236,6 +240,9 @@ public class PersonEntity implements Serializable {
     private String lastName;
     private String email;
     private int age;
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    private List<ItemEntity> items;
 
     /**
      * Used by {@link fr.nvh.spring.utilities.ExampleApplication}.

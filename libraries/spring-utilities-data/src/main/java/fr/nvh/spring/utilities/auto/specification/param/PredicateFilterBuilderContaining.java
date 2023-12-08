@@ -225,9 +225,9 @@ class PredicateFilterBuilderContaining implements PredicateFilterBuilder {
     public <T extends RequestParamType> Predicate buildPredicate(
             T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
         if (Objects.isNull(searchValue)) {
-            return builder.isNull(root.get(filter.fieldName()));
+            return builder.isNull(buildPath(root, filter.fieldName()));
         } else {
-            return builder.like(root.get(filter.fieldName()), mapToLikeContaining(searchValue));
+            return builder.like(buildPath(root, filter.fieldName()), mapToLikeContaining(searchValue));
         }
     }
 

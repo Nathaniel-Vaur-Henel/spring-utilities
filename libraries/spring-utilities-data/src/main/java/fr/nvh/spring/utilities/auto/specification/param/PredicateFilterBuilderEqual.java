@@ -218,9 +218,11 @@ class PredicateFilterBuilderEqual implements PredicateFilterBuilder {
     public <T extends RequestParamType> Predicate buildPredicate(
             T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
         if (Objects.isNull(searchValue)) {
-            return builder.isNull(root.get(filter.fieldName()));
+            return builder.isNull(buildPath(root, filter.fieldName()));
         } else {
-            return builder.equal(root.get(filter.fieldName()), searchValue);
+            return builder.equal(buildPath(root, filter.fieldName()), searchValue);
         }
     }
+
+
 }

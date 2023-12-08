@@ -228,7 +228,7 @@ class PersonRepositoryExample {
     private final PersonFindAllUseCase personFindAllUseCase;
 
     void testAndLogAll() {
-        log.info("PersonRepositoryExample testAndLogAll");
+        log.info("* PersonRepositoryExample testAndLogAll *");
 
         testRepositoryFindAll();
         testFindAllUseCaseWithNoParam();
@@ -238,6 +238,7 @@ class PersonRepositoryExample {
         testFindAllUseCaseWithEqualToNullParam();
         testFindAllUseCaseWithMinParam();
         testFindAllUseCaseWithMinAndMaxParam();
+        testFindAllUseCaseWithEqualAndDotParam();
     }
 
     private void testRepositoryFindAll() {
@@ -302,5 +303,12 @@ class PersonRepositoryExample {
         List<PersonEntity> allPersons = personFindAllUseCase.findAll(theHundredYearOld);
         log.info("The hundred-year-old: {}", allPersons);
         // Expected: The hundred-year-old:1  [Gimli]
+    }
+
+    private void testFindAllUseCaseWithEqualAndDotParam() {
+        Map<PersonRequestParamType, String> daggerOwnersParams = new EnumMap<>(PersonRequestParamType.class);
+        daggerOwnersParams.put(PersonRequestParamType.HAS, "Dagger");
+        log.info("Dagger owners: {}", personFindAllUseCase.findAll(daggerOwnersParams));
+        // Expected: Dagger owners: 2 [Meriadoc Brandybuck, Peregrin Took]
     }
 }

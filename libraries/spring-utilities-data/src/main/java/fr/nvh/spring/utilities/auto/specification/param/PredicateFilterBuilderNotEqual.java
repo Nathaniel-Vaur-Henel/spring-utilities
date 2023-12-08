@@ -218,9 +218,9 @@ class PredicateFilterBuilderNotEqual implements PredicateFilterBuilder {
     public <T extends RequestParamType> Predicate buildPredicate(
             T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
         if (Objects.isNull(searchValue)) {
-            return builder.isNotNull(root.get(filter.fieldName()));
+            return builder.isNotNull(buildPath(root, filter.fieldName()));
         } else {
-            return builder.notEqual(root.get(filter.fieldName()), searchValue);
+            return builder.notEqual(buildPath(root, filter.fieldName()), searchValue);
         }
     }
 }

@@ -204,19 +204,49 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.param;
+package fr.nvh.spring.utilities.fellowship.item;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import fr.nvh.spring.utilities.fellowship.person.PersonEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+
+import java.io.Serializable;
 
 /**
- * This class permits to build a {@link Predicate} with {@link SpecificationOperator#LESS_OR_EQUAL}.
+ * Simple entity to do test.
  */
-class PredicateFilterBuilderLessOrEqual implements PredicateFilterBuilder {
+@Table(name = "item")
+@Entity
+@Setter
+@Getter
+public class ItemEntity implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @NonNull
+    @Column(nullable = false)
+    private String name;
+
+    @ManyToOne(optional = false)
+    private PersonEntity owner;
+
+    /**
+     * Used by {@link fr.nvh.spring.utilities.ExampleApplication}.
+     *
+     * @return the firstname and the lastname if exists.
+     */
     @Override
-    public <T extends RequestParamType> Predicate buildPredicate(
-            T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
-        return builder.lessThanOrEqualTo(buildPath(root, filter.fieldName()), searchValue);
+    public String toString() {
+        return name + " of " + owner;
     }
 }

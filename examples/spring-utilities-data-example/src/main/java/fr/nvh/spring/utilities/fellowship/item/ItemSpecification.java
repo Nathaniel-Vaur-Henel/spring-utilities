@@ -204,19 +204,15 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.param;
+package fr.nvh.spring.utilities.fellowship.item;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import fr.nvh.spring.utilities.auto.specification.AutoSpecification;
 
-/**
- * This class permits to build a {@link Predicate} with {@link SpecificationOperator#LESS_OR_EQUAL}.
- */
-class PredicateFilterBuilderLessOrEqual implements PredicateFilterBuilder {
-    @Override
-    public <T extends RequestParamType> Predicate buildPredicate(
-            T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
-        return builder.lessThanOrEqualTo(buildPath(root, filter.fieldName()), searchValue);
+import java.util.Map;
+
+public class ItemSpecification extends AutoSpecification<ItemRequestParamType, ItemEntity> {
+
+    public ItemSpecification(Map<ItemRequestParamType, String> criteria) {
+        super(ItemRequestParamType.class, criteria);
     }
 }

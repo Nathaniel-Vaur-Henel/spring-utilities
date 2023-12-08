@@ -215,6 +215,6 @@ class PredicateFilterBuilderLess implements PredicateFilterBuilder {
     @Override
     public <T extends RequestParamType> Predicate buildPredicate(
             T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
-        return builder.lessThan(root.get(filter.fieldName()), searchValue);
+        return builder.lessThan(buildPath(root, filter.fieldName()), searchValue);
     }
 }

@@ -9,3 +9,24 @@ INSERT INTO person (first_name, last_name, email, age) VALUES
  ('Meriadoc', 'Brandybuck', 'meriadoc.brandybuck@theshire.ring', 37), 
  ('Peregrin', 'Took', 'peregrin.took@theshire.ring', 28)
 ;
+
+INSERT INTO item (name, owner_id) VALUES
+ ('Staff', 1),
+ ('Pipe', 1),
+ ('Anduril', 2),
+ ('Horn', 2),
+ ('Horn', 3),
+ ('Sword', 3),
+ ('Elfish Bow', 4),
+ ('Elfish knife', 4),
+ ('Dwarf axe', 5),
+ ('Dwarf helm', 5),
+ ('One ring', 6),
+ ('Sting', 6),
+ ('Sam`s bag', 7),
+ ('Mr. Bilbo`s book', 7),
+ ('Dagger', 8),
+ ('Mushrooms', 8),
+ ('Dagger', 9),
+ ('Bacon', 9)
+;

@@ -206,11 +206,14 @@
 
 package fr.nvh.spring.utilities.auto.specification;
 
+import fr.nvh.spring.utilities.auto.specification.spring.SarabandEntity;
+import fr.nvh.spring.utilities.auto.specification.spring.SarabandRepository;
 import fr.nvh.spring.utilities.auto.specification.spring.TestApplication;
 import fr.nvh.spring.utilities.auto.specification.spring.TestEntity;
 import fr.nvh.spring.utilities.auto.specification.spring.TestEntityBuilder;
 import fr.nvh.spring.utilities.auto.specification.spring.TestEntityRepository;
 import fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -223,6 +226,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -248,12 +252,16 @@ import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityReques
 import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.STRING_NOT_EQUAL;
 import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.STRING_NOT_LIKE;
 
+@Slf4j
 @ExtendWith(SpringExtension.class)
 @Import(value = {TestApplication.class})
 class AutoSpecificationTest {
 
     @Autowired
     private TestEntityRepository repository;
+
+    @Autowired
+    private SarabandRepository sarabandRepository;
 
     @BeforeEach
     void setUp() {
@@ -857,6 +865,39 @@ class AutoSpecificationTest {
 
             // then
             Assertions.assertThat(result).isEmpty();
+        }
+    }
+
+    @Nested
+    class DotedFieldName {
+
+        @BeforeEach
+        void setUp() {
+            List<TestEntity> entities = TestEntityBuilder.build(5);
+            repository.saveAll(entities);
+            for (int i = 0; i < entities.size(); i++) {
+                SarabandEntity build = SarabandEntity.builder()
+                        .middle(getEntity(entities, i))
+                        .leftHand(getEntity(entities, i - 1))
+                        .rightHand(getEntity(entities, i + 1))
+                        .build();
+                sarabandRepository.save(build);
+            }
+        }
+
+        private static TestEntity getEntity(List<TestEntity> entities, int i) {
+            if (i < 0) {
+                return null;
+            }
+            if (i >= entities.size()) {
+                return null;
+            }
+            return entities.get(i);
+        }
+
+        @Test
+        void name() {
+            sarabandRepository.findAll().stream().map(SarabandEntity::toString).forEach(log::info);
         }
     }
 
