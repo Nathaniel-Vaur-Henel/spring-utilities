@@ -204,31 +204,103 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities;
 
-import fr.nvh.spring.utilities.WrappedListWithSize;
-import fr.nvh.spring.utilities.auto.specification.MapStringToMapEnumConverter;
+import fr.nvh.spring.utilities.fellowship.person.PersonEntity;
+import fr.nvh.spring.utilities.fellowship.person.PersonFindAllUseCase;
+import fr.nvh.spring.utilities.fellowship.person.PersonRepository;
+import fr.nvh.spring.utilities.fellowship.person.PersonRequestParamType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
+/**
+ * Simple examples of a {@link fr.nvh.spring.utilities.auto.specification.param.RequestParamType}.
+ */
+@Slf4j
 @RequiredArgsConstructor
-public class PersonFindAllUseCase {
+class PersonRepositoryExample {
+
     private final PersonRepository personRepository;
+    private final PersonFindAllUseCase personFindAllUseCase;
 
-    public List<PersonEntity> findAll(Map<PersonRequestParamType, String> typedParams) {
-        PersonSpecification personSpecification = new PersonSpecification(typedParams);
-        return new WrappedListWithSize<>(personRepository.findAll(personSpecification));
+    void testAndLogAll() {
+        log.info("PersonRepositoryExample testAndLogAll");
+
+        testRepositoryFindAll();
+        testFindAllUseCaseWithNoParam();
+        testFindAlUseCaseWithOverSearchParam();
+        testFindAlUseCaseWithContainingParam();
+        testFindAllUseCaseWithEqualParam();
+        testFindAllUseCaseWithEqualToNullParam();
+        testFindAllUseCaseWithMinParam();
+        testFindAllUseCaseWithMinAndMaxParam();
     }
 
-    public List<PersonEntity> convertAndFindAll(Map<String, String> params) {
-        return findAll(convert(params));
+    private void testRepositoryFindAll() {
+        WrappedListWithSize<PersonEntity> allPersons = new WrappedListWithSize<>(this.personRepository.findAll());
+        log.info("The full fellowship: {}", allPersons);
+        // Expected: The full fellowship: 9 [Gandalf The Grey, Aragorn, Boromir, Legolas, Gimli, Frodo
+        // Baggins, Samwise Gamegee, Meriadoc Brandybuck, Peregrin Took]
     }
 
-    private static Map<PersonRequestParamType, String> convert(Map<String, String> params) {
-        return MapStringToMapEnumConverter.convert(PersonRequestParamType.class, params);
+    private void testFindAllUseCaseWithNoParam() {
+        Map<PersonRequestParamType, String> noParams = new EnumMap<>(PersonRequestParamType.class);
+        List<PersonEntity> allPersons = personFindAllUseCase.findAll(noParams);
+        log.info("The full fellowship again: {}", allPersons);
+        // Expected: The full fellowship again: 9 [Gandalf The Grey, Aragorn, Boromir, Legolas, Gimli,
+        // Frodo Baggins, Samwise Gamegee, Meriadoc Brandybuck, Peregrin Took]
+    }
+
+    private void testFindAlUseCaseWithOverSearchParam() {
+        Map<PersonRequestParamType, String> theShire = new EnumMap<>(PersonRequestParamType.class);
+        theShire.put(PersonRequestParamType.FILTER, "theshire");
+        List<PersonEntity> allPersons = personFindAllUseCase.findAll(theShire);
+        log.info("The Shire: {}", allPersons);
+        // Expected: The Shire: 4 [Frodo Baggins, Samwise Gamegee, Meriadoc Brandybuck, Peregrin Took]
+    }
+
+    private void testFindAlUseCaseWithContainingParam() {
+        Map<PersonRequestParamType, String> erebor = new EnumMap<>(PersonRequestParamType.class);
+        erebor.put(PersonRequestParamType.EMAIL, "erebor");
+        List<PersonEntity> allPersons = personFindAllUseCase.findAll(erebor);
+        log.info("Erebor: {}", allPersons);
+        // Expected: The Shire: 1 [Gimli]
+    }
+
+    private void testFindAllUseCaseWithEqualParam() {
+        Map<PersonRequestParamType, String> boromir = new EnumMap<>(PersonRequestParamType.class);
+        boromir.put(PersonRequestParamType.FIRST_NAME, "Boromir");
+        List<PersonEntity> allPersons = personFindAllUseCase.findAll(boromir);
+        log.info("Boromir: {}", allPersons);
+        // Expected: Boromir: 1 [Boromir]
+    }
+
+    private void testFindAllUseCaseWithEqualToNullParam() {
+        Map<PersonRequestParamType, String> theNoLastNamed = new EnumMap<>(PersonRequestParamType.class);
+        theNoLastNamed.put(PersonRequestParamType.LAST_NAME, null);
+        List<PersonEntity> allPersons = personFindAllUseCase.findAll(theNoLastNamed);
+        log.info("They have no last name: {}", allPersons);
+        // Expected: They have no last name: 4 [Aragorn, Boromir, Legolas, Gimli]
+    }
+
+    private void testFindAllUseCaseWithMinParam() {
+        Map<PersonRequestParamType, String> theThousandYearOld = new EnumMap<>(PersonRequestParamType.class);
+        theThousandYearOld.put(PersonRequestParamType.MIN_AGE, "1000");
+        List<PersonEntity> allPersons = personFindAllUseCase.findAll(theThousandYearOld);
+        log.info("The thousand-year-old and more: {}", allPersons);
+        // Expected: The thousand-year-old and more: 2 [Gandalf The Grey, Legolas]
+    }
+
+    private void testFindAllUseCaseWithMinAndMaxParam() {
+        Map<PersonRequestParamType, String> theHundredYearOld = new EnumMap<>(PersonRequestParamType.class);
+        theHundredYearOld.put(PersonRequestParamType.MIN_AGE, "100");
+        theHundredYearOld.put(PersonRequestParamType.MAX_AGE, "200");
+        List<PersonEntity> allPersons = personFindAllUseCase.findAll(theHundredYearOld);
+        log.info("The hundred-year-old: {}", allPersons);
+        // Expected: The hundred-year-old:1  [Gimli]
     }
 }

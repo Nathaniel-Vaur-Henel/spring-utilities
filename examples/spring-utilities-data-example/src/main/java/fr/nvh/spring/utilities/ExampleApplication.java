@@ -208,14 +208,10 @@ package fr.nvh.spring.utilities;
 
 import fr.nvh.spring.utilities.fellowship.person.PersonFindAllUseCase;
 import fr.nvh.spring.utilities.fellowship.person.PersonRepository;
-import fr.nvh.spring.utilities.fellowship.person.PersonRequestParamType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-
-import java.util.EnumMap;
-import java.util.Map;
 
 /**
  * A simple example. Please take a look to the resources/schema.sql and resources/data.sql to have
@@ -231,47 +227,10 @@ public class ExampleApplication {
 
     public static void main(String[] args) {
         ApplicationContext applicationContext = SpringApplication.run(ExampleApplication.class, args);
+
         PersonRepository personRepository = applicationContext.getBean(PersonRepository.class);
-
         PersonFindAllUseCase personFindAllUseCase = applicationContext.getBean(PersonFindAllUseCase.class);
-        log.info("The full fellowship: {}", personRepository.findAll());
-        // Expected: The full fellowship: [Gandalf The Grey, Aragorn, Boromir, Legolas, Gimli, Frodo
-        // Baggins, Samwise Gamegee, Meriadoc Brandybuck, Peregrin Took]
-
-        Map<PersonRequestParamType, String> noParams = new EnumMap<>(PersonRequestParamType.class);
-        log.info("The full fellowship again: {}", personFindAllUseCase.findAll(noParams));
-        // Expected: The full fellowship again: [Gandalf The Grey, Aragorn, Boromir, Legolas, Gimli,
-        // Frodo Baggins, Samwise Gamegee, Meriadoc Brandybuck, Peregrin Took]
-
-        Map<PersonRequestParamType, String> theShire = new EnumMap<>(PersonRequestParamType.class);
-        theShire.put(PersonRequestParamType.FILTER, "theshire");
-        log.info("The Shire: {}", personFindAllUseCase.findAll(theShire));
-        // Expected: The Shire: [Frodo Baggins, Samwise Gamegee, Meriadoc Brandybuck, Peregrin Took]
-
-        Map<PersonRequestParamType, String> erebor = new EnumMap<>(PersonRequestParamType.class);
-        erebor.put(PersonRequestParamType.EMAIL, "erebor");
-        log.info("Erebor: {}", personFindAllUseCase.findAll(erebor));
-        // Expected: The Shire: [Gimli]
-
-        Map<PersonRequestParamType, String> boromir = new EnumMap<>(PersonRequestParamType.class);
-        boromir.put(PersonRequestParamType.FIRST_NAME, "Boromir");
-        log.info("Boromir: {}", personFindAllUseCase.findAll(boromir));
-        // Expected: Boromir: [Boromir]
-
-        Map<PersonRequestParamType, String> theNoLastNamed = new EnumMap<>(PersonRequestParamType.class);
-        theNoLastNamed.put(PersonRequestParamType.LAST_NAME, null);
-        log.info("They have no last name: {}", personFindAllUseCase.findAll(theNoLastNamed));
-        // Expected: They have no last name: [Aragorn, Boromir, Legolas, Gimli]
-
-        Map<PersonRequestParamType, String> theHundredYearOld = new EnumMap<>(PersonRequestParamType.class);
-        theHundredYearOld.put(PersonRequestParamType.MIN_AGE, "100");
-        theHundredYearOld.put(PersonRequestParamType.MAX_AGE, "200");
-        log.info("The hundred-year-old: {}", personFindAllUseCase.findAll(theHundredYearOld));
-        // Expected: The hundred-year-old: [Gimli]
-
-        Map<PersonRequestParamType, String> theThousandYearOld = new EnumMap<>(PersonRequestParamType.class);
-        theThousandYearOld.put(PersonRequestParamType.MIN_AGE, "1000");
-        log.info("The thousand-year-old and more: {}", personFindAllUseCase.findAll(theThousandYearOld));
-        // Expected: The thousand-year-old and more: [Gandalf The Grey, Legolas]
+        PersonRepositoryExample personRepositoryExample = new PersonRepositoryExample(personRepository, personFindAllUseCase);
+        personRepositoryExample.testAndLogAll();
     }
 }
