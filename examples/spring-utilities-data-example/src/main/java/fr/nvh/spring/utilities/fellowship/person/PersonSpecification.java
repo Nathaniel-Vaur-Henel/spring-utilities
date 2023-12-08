@@ -213,6 +213,6 @@ import java.util.Map;
 public class PersonSpecification extends AutoSpecification<PersonRequestParamType, PersonEntity> {
 
     public PersonSpecification(Map<PersonRequestParamType, String> criteria) {
-        super(PersonRequestParamType.class, criteria);
+        super(PersonRequestParamType.values(), criteria);
     }
 }

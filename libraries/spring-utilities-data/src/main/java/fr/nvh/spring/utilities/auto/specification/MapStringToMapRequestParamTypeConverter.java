@@ -212,6 +212,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -221,32 +222,29 @@ import java.util.stream.Collectors;
  * {@link Map}<{@link RequestParamType}, String>.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MapStringToMapEnumConverter {
+public final class MapStringToMapRequestParamTypeConverter {
 
     /**
      * Convert a {@link Map}<String, String> to an {@link EnumMap}<<code>P</code>, String> according to
      * {@link RequestParamType#isArgumentName}.
      *
-     * @param enumClass the {@link Class} of the request param extending {@link Enum} and {@link
-     *     RequestParamType}
-     * @param sourceParams a {@link Map}<String, String> where entries are param name
-     *     / value.
+     * @param <P>           request param extending {@link RequestParamType}.
+     * @param requestParamTypes an array of {@link RequestParamType} to convert to.
+     * @param sourceParams  a {@link Map}<String, String> where entries are param name / value.
      * @return a converted {@link EnumMap}<<code>P</code>, String> according.
-     * @param <P> request param extending {@link Enum} and {@link RequestParamType}
      */
-    public static <P extends Enum<P> & RequestParamType> Map<P, String> convert(
-            final Class<P> enumClass, Map<String, String> sourceParams) {
+    public static <P extends RequestParamType> Map<P, String> convert(
+            P[] requestParamTypes, Map<String, String> sourceParams) {
         return sourceParams.entrySet().stream()
-                .map(entry -> mapToEnumEntry(enumClass, entry))
+                .map(entry -> mapToEntry(requestParamTypes, entry))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, () -> new EnumMap<>(enumClass)));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
     }
 
-    private static <E extends Enum<E> & RequestParamType> Optional<Map.Entry<E, String>> mapToEnumEntry(
-            Class<E> enumClass, Map.Entry<String, String> entry) {
-        return Arrays.stream(enumClass.getEnumConstants())
+    private static <E extends RequestParamType> Optional<Map.Entry<E, String>> mapToEntry(
+            E[] requestParamTypes, Map.Entry<String, String> entry) {
+        return Arrays.stream(requestParamTypes)
                 .filter(param -> param.isArgumentName(entry.getKey()))
                 .findFirst()
                 .map(param -> Map.entry(param, entry.getValue()));

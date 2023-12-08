@@ -221,19 +221,19 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * This {@link Specification} handle an {@link Enum} implementing {@link RequestParamType} to build
- * a {@link Predicate}. To more information, read the documentation or look at example.
+ * This {@link Specification} handle {@link RequestParamType} to build a {@link Predicate}.
+ * To more information, read the documentation or look at example.
  *
- * @param <P> param representing {@link Enum} and {@link RequestParamType}.
+ * @param <P> param representing {@link RequestParamType}.
  * @param <E> param representing the entity.
  */
 @RequiredArgsConstructor
-public class AutoSpecification<P extends Enum<P> & RequestParamType, E> implements Specification<E> {
+public class AutoSpecification<P extends RequestParamType, E> implements Specification<E> {
+
     /**
-     * This class must extends{@link RequestParamType} and {@link Enum}. It is the link to your own
-     * {@link RequestParamType}
+     * This array contains all your {@link RequestParamType}.
      */
-    private final Class<P> typeFilterClass;
+    private final P[] requestParamTypes;
     /**
      * This {@link Map}, with your own {@link RequestParamType} as key and String as value,
      * contains your criteria.
@@ -249,13 +249,13 @@ public class AutoSpecification<P extends Enum<P> & RequestParamType, E> implemen
             Map.Entry<P, String> entry = overSearch.get();
             String searchValue = entry.getValue();
             P key = entry.getKey();
-            Predicate[] predicates = Arrays.stream(typeFilterClass.getEnumConstants())
+            Predicate[] predicates = Arrays.stream(requestParamTypes)
                     .filter(RequestParamType::isOverSearchIncluded)
                     .map(filter -> key.operator().buildPredicate(filter, root, builder, searchValue))
                     .toArray(Predicate[]::new);
             return builder.or(predicates);
         } else {
-            Predicate[] predicates = Arrays.stream(typeFilterClass.getEnumConstants())
+            Predicate[] predicates = Arrays.stream(requestParamTypes)
                     .filter(params::containsKey)
                     .map(param -> buildPredicate(root, builder, param))
                     .toArray(Predicate[]::new);

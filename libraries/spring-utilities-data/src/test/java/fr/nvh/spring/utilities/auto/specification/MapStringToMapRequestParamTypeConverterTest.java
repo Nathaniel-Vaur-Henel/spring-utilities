@@ -221,10 +221,10 @@ import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.V
 import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.VALUE_3;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MapStringToMapEnumConverterTest {
+class MapStringToMapRequestParamTypeConverterTest {
     @Test
     void assert_that_is_utility_class() throws Exception {
-        TestUtils.assertThatIsUtilityClass(MapStringToMapEnumConverter.class);
+        TestUtils.assertThatIsUtilityClass(MapStringToMapRequestParamTypeConverter.class);
     }
 
     @Test
@@ -236,7 +236,8 @@ class MapStringToMapEnumConverterTest {
         params.put(NOT_EXISTING_PARAM, VALUE_3);
 
         // when
-        var converted = MapStringToMapEnumConverter.convert(DefaultRequestParamType.class, params);
+        var converted = MapStringToMapRequestParamTypeConverter.convert(
+                DefaultRequestParamType.class.getEnumConstants(), params);
 
         // then
         assertThat(converted)
@@ -254,7 +255,8 @@ class MapStringToMapEnumConverterTest {
         params.put(NOT_EXISTING_PARAM, VALUE_3);
 
         // when
-        var converted = MapStringToMapEnumConverter.convert(ParamNameRequestParamType.class, params);
+        var converted = MapStringToMapRequestParamTypeConverter.convert(
+                ParamNameRequestParamType.class.getEnumConstants(), params);
 
         // then
         assertThat(converted)
@@ -272,7 +274,8 @@ class MapStringToMapEnumConverterTest {
         params.put(NOT_EXISTING_PARAM, VALUE_3);
 
         // when
-        var converted = MapStringToMapEnumConverter.convert(SetRequestParamType.class, params);
+        var converted =
+                MapStringToMapRequestParamTypeConverter.convert(SetRequestParamType.class.getEnumConstants(), params);
 
         // then
         assertThat(converted)
@@ -290,7 +293,8 @@ class MapStringToMapEnumConverterTest {
         params.put(NOT_EXISTING_PARAM, VALUE_3);
 
         // when
-        var converted = MapStringToMapEnumConverter.convert(SetRequestParamType.class, params);
+        var converted =
+                MapStringToMapRequestParamTypeConverter.convert(SetRequestParamType.class.getEnumConstants(), params);
 
         // then
         assertThat(converted)
@@ -307,7 +311,8 @@ class MapStringToMapEnumConverterTest {
         params.put("filter", VALUE_2);
 
         // when
-        var converted = MapStringToMapEnumConverter.convert(SetRequestParamType.class, params);
+        var converted =
+                MapStringToMapRequestParamTypeConverter.convert(SetRequestParamType.class.getEnumConstants(), params);
 
         // then
         assertThat(converted).hasSize(1).containsEntry(SetRequestParamType.FILTER, VALUE_1);
@@ -320,7 +325,8 @@ class MapStringToMapEnumConverterTest {
         params.put(NOT_EXISTING_PARAM, VALUE_1);
 
         // when
-        var converted = MapStringToMapEnumConverter.convert(SetRequestParamType.class, params);
+        var converted =
+                MapStringToMapRequestParamTypeConverter.convert(SetRequestParamType.class.getEnumConstants(), params);
 
         // then
         assertThat(converted).isEmpty();
