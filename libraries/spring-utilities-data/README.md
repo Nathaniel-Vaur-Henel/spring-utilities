@@ -18,6 +18,8 @@ Especially to [PersonRequestParamType](../../examples/spring-utilities-data-exam
 
 And if you need to add a new parameter, just add a line in your enum. 👍
 
+Instead of `enum`, you can create a `class` with instanced objects, but it's not recommended.
+
 ### Detailed
 
 #### Write your own RequestParamType
@@ -42,7 +44,7 @@ Example available to [PersonSpecification](../../examples/spring-utilities-data-
 
 To finish, you have just to :
 
-- If you have an input, like an HTTP request, get parameters as `Map<String, String>`, convert it to a `Map<YourRequestParamType, String>` using the method `convert` of [MapStringToMapEnumConverter](src/main/java/fr/nvh/spring/utilities/auto/specification/MapStringToMapEnumConverter.java).
+- If you have an input, like an HTTP request, get parameters as `Map<String, String>`, convert it to a `Map<YourRequestParamType, String>` using the method `convert` of [MapStringToMapEnumConverter](src/main/java/fr/nvh/spring/utilities/auto/specification/MapStringToMapRequestParamTypeConverter.java).
 - Instantiate an [AutoSpecification](src/main/java/fr/nvh/spring/utilities/auto/specification/AutoSpecification.java) with this converted `Map`.
 - Use this [AutoSpecification](src/main/java/fr/nvh/spring/utilities/auto/specification/AutoSpecification.java) in your [repository](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/Repository.html) method like any [Specification](https://docs.spring.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/domain/Specification.html).
 - And get the result ! 👍
@@ -52,6 +54,7 @@ To finish, you have just to :
 
 It's just some ideas. Maybe implemented sometime. Feel free to contribute.
 
+- [ ] handle `.` in fieldName
 - [ ] add a `Get Started`
 - [ ] add a param type for params in over search not accessible by params name
 - [ ] add contributing guideline and code of conduct.

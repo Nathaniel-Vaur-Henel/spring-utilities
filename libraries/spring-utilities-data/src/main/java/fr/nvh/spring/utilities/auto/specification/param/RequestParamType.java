@@ -208,11 +208,12 @@ package fr.nvh.spring.utilities.auto.specification.param;
 
 import lombok.NonNull;
 
+import java.io.Serializable;
+
 /**
- * This interface permit to create {@link Enum} to handle request parameters. For more information,
- * please read the documentation and look at the example.
+ * This interface handles request parameters. For more information, please read the documentation and look at the example.
  */
-public interface RequestParamType {
+public interface RequestParamType extends Serializable {
     /**
      * @return the JPA field name.
      */
