@@ -272,7 +272,7 @@ class AutoSpecificationTest {
             params.put(NUMBER_EQUAL, "5");
             params.put(STRING_EQUAL, "string_1");
             AutoSpecification<TestEntityRequestParamType, TestEntity> specification =
-                    new AutoSpecification<>(TestEntityRequestParamType.class, params);
+                    new AutoSpecification<>(TestEntityRequestParamType.values(), params);
 
             // when
             var result = repository.findAll(specification);
@@ -866,6 +866,6 @@ class AutoSpecificationTest {
 
         Map<TestEntityRequestParamType, String> params = new HashMap<>();
         params.put(paramType, valueString);
-        return new AutoSpecification<>(TestEntityRequestParamType.class, params);
+        return new AutoSpecification<>(TestEntityRequestParamType.values(), params);
     }
 }
