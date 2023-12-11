@@ -54,7 +54,7 @@ To finish, you have just to :
 
 It's just some ideas. Maybe implemented sometime. Feel free to contribute.
 
-- [ ] handle `.` in fieldName
+- [x] handle `.` in fieldName
 - [ ] add a `Get Started`
 - [ ] add a param type for params in over search not accessible by params name
 - [ ] add contributing guideline and code of conduct.

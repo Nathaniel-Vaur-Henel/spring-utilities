@@ -206,34 +206,57 @@
 
 package fr.nvh.spring.utilities.fellowship.person;
 
+import fr.nvh.spring.utilities.fellowship.item.ItemBuilder;
+import fr.nvh.spring.utilities.fellowship.item.ItemEntity;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+class PersonMapperTest {
 
-class PersonEntityTest {
+    private final PersonMapper personMapper = new PersonMapper();
 
     @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
+    void using_person_should_correctly_mapped() {
         // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
+        PersonEntity person = PersonBuilder.buildPerson(1);
+        person.setId(1L);
+        ItemEntity item1 = ItemBuilder.buildItem(1, person);
+        ItemEntity item2 = ItemBuilder.buildItem(2, person);
+        person.getItems().add(item1);
+        person.getItems().add(item2);
 
         // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
+        PersonDto dto = personMapper.toDto(person);
+
+        // then
+        Assertions.assertThat(dto)
+                .hasFieldOrPropertyWithValue("id", person.getId())
+                .hasFieldOrPropertyWithValue("firstName", person.getFirstName())
+                .hasFieldOrPropertyWithValue("lastName", person.getLastName())
+                .hasFieldOrPropertyWithValue("email", person.getEmail())
+                .hasFieldOrPropertyWithValue("age", person.getAge())
+                .extracting(PersonDto::getItemNames)
+                .asList()
+                .contains(item1.getName(), item2.getName());
     }
 
     @Test
-    void toString_with_firstName_should_return_firstName() {
+    void using_person_with_no_item_should_correctly_mapped() {
         // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
+        PersonEntity person = PersonBuilder.buildPerson(1);
 
         // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
+        PersonDto dto = personMapper.toDto(person);
+
+        // then
+        Assertions.assertThat(dto.getItemNames()).isEmpty();
+    }
+
+    @Test
+    void using_null_should_return_null() {
+        // when
+        PersonDto dto = personMapper.toDto(null);
+        // then
+        Assertions.assertThat(dto).isNull();
     }
 }

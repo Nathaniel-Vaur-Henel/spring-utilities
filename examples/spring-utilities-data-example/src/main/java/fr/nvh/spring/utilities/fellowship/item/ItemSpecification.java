@@ -213,6 +213,6 @@ import java.util.Map;
 public class ItemSpecification extends AutoSpecification<ItemRequestParamType, ItemEntity> {
 
     public ItemSpecification(Map<ItemRequestParamType, String> criteria) {
-        super(ItemRequestParamType.class, criteria);
+        super(ItemRequestParamType.values(), criteria);
     }
 }

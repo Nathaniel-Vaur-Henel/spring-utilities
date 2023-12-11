@@ -204,16 +204,33 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities.fellowship.item;
 
-public class TestUtils {
-    static boolean notNullAndContains(String value, String searchedValue) {
-        return value != null && value.contains(searchedValue);
-    }
+import fr.nvh.spring.utilities.fellowship.person.PersonDto;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-    static boolean isWellFiltered(PersonEntity person, String searchedValue) {
-        return notNullAndContains(person.getEmail(), searchedValue)
-                || notNullAndContains(person.getFirstName(), searchedValue)
-                || notNullAndContains(person.getLastName(), searchedValue);
+@Getter
+@Setter
+@EqualsAndHashCode
+@NoArgsConstructor
+public class ItemDto {
+
+    private long id;
+
+    private String name;
+
+    private PersonDto owner;
+
+    /**
+     * Used by {@link fr.nvh.spring.utilities.ExampleApplication}.
+     *
+     * @return the name of the item and of his owner.
+     */
+    @Override
+    public String toString() {
+        return name + " of " + owner;
     }
 }

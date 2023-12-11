@@ -204,53 +204,45 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.spring;
+package fr.nvh.spring.utilities.fellowship.item;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import fr.nvh.spring.utilities.fellowship.person.PersonBuilder;
+import fr.nvh.spring.utilities.fellowship.person.PersonEntity;
+import fr.nvh.spring.utilities.fellowship.person.PersonMapper;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import java.io.Serializable;
+class ItemMapperTest {
 
-/**
- * Simple entity to do test.
- */
-@Table(name = "saraband")
-@Entity
-@Setter
-@Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class SarabandEntity implements Serializable {
+    private final ItemMapper itemMapper = new ItemMapper(new PersonMapper());
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Test
+    void using_item_should_correctly_mapped() {
+        // given
+        PersonEntity owner = PersonBuilder.buildPerson(1);
+        ItemEntity item = ItemBuilder.buildItem(1, owner);
+        item.setId(1L);
 
-    @OneToOne(optional = false)
-    private TestEntity middle;
+        // when
+        ItemDto dto = itemMapper.toDto(item);
 
-    @OneToOne
-    private TestEntity leftHand;
-
-    @OneToOne
-    private TestEntity rightHand;
-
-    @Override
-    public String toString() {
-        return middle.getId() + " has " + who(leftHand) + " on the left and " + who(rightHand) + " on the right";
+        // then
+        Assertions.assertThat(dto)
+                .hasFieldOrPropertyWithValue("id", item.getId())
+                .hasFieldOrPropertyWithValue("name", item.getName())
+                .extracting(ItemDto::getOwner)
+                .hasFieldOrPropertyWithValue("id", owner.getId())
+                .hasFieldOrPropertyWithValue("firstName", owner.getFirstName())
+                .hasFieldOrPropertyWithValue("lastName", owner.getLastName())
+                .hasFieldOrPropertyWithValue("email", owner.getEmail())
+                .hasFieldOrPropertyWithValue("age", owner.getAge());
     }
 
-    private String who(TestEntity person) {
-        return person == null ? "nobody" : String.valueOf(person.getId());
+    @Test
+    void using_null_should_return_null() {
+        // when
+        ItemDto dto = itemMapper.toDto(null);
+        // then
+        Assertions.assertThat(dto).isNull();
     }
 }

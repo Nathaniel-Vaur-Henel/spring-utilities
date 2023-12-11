@@ -204,36 +204,73 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities.auto.specification.spring;
 
-import org.junit.jupiter.api.Test;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.io.Serializable;
 
-class PersonEntityTest {
+/**
+ * Simple entity to do test.
+ */
+@Table(name = "saraband")
+@Entity
+@Setter
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class LinkedDancerEntity implements Serializable {
 
-    @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
+    @OneToOne
+    private LinkedDancerEntity leftHand;
+
+    @OneToOne
+    private LinkedDancerEntity rightHand;
+
+    public LinkedDancerEntity(long id) {
+        this.id = id;
     }
 
-    @Test
-    void toString_with_firstName_should_return_firstName() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
+    @Override
+    public String toString() {
+        return id + " has " + who(leftHand) + " on the left and " + who(rightHand) + " on the right";
+    }
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
+    private String who(LinkedDancerEntity person) {
+        return person == null ? "nobody" : String.valueOf(person.getId());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        LinkedDancerEntity dancer = (LinkedDancerEntity) o;
+
+        return id == dancer.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
     }
 }

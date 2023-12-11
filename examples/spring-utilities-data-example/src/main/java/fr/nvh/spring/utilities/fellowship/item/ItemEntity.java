@@ -243,7 +243,7 @@ public class ItemEntity implements Serializable {
     /**
      * Used by {@link fr.nvh.spring.utilities.ExampleApplication}.
      *
-     * @return the firstname and the lastname if exists.
+     * @return the name of the item and of his owner.
      */
     @Override
     public String toString() {

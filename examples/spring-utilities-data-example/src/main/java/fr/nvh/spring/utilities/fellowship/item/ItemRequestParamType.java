@@ -221,13 +221,13 @@ import static fr.nvh.spring.utilities.auto.specification.param.SpecificationPara
 import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_INCLUDED;
 
 public enum ItemRequestParamType implements RequestParamType {
-    OWNER_FILTER(null, OVER_SEARCH, CONTAINING),
+    OWNER_FILTER("owner.filter", OVER_SEARCH, CONTAINING),
     OWNER_FIRST_NAME("owner.firstName", OVER_SEARCH_INCLUDED, EQUAL),
     OWNER_LAST_NAME("owner.lastName", OVER_SEARCH_INCLUDED, EQUAL),
     OWNER_EMAIL("owner.email", OVER_SEARCH_INCLUDED, CONTAINING),
-    OWNER_CONTAINING_AGE(Constants.OWNER_AGE, OVER_SEARCH_EXCLUDED, NOT_EQUAL),
-    OWNER_MIN_AGE(Constants.OWNER_AGE, OVER_SEARCH_EXCLUDED, GREATER_OR_EQUAL),
-    OWNER_MAX_AGE(Constants.OWNER_AGE, OVER_SEARCH_EXCLUDED, LESS_OR_EQUAL),
+    OWNER_CONTAINING_AGE("owner.age", OVER_SEARCH_EXCLUDED, NOT_EQUAL),
+    OWNER_MIN_AGE("owner.age", OVER_SEARCH_EXCLUDED, GREATER_OR_EQUAL),
+    OWNER_MAX_AGE("owner.age", OVER_SEARCH_EXCLUDED, LESS_OR_EQUAL),
 
     ITEM_NAME("name", OVER_SEARCH_EXCLUDED, EQUAL),
     ;
@@ -235,8 +235,8 @@ public enum ItemRequestParamType implements RequestParamType {
     private final SpecificationParamType paramType;
     private final SpecificationOperator operator;
 
-    ItemRequestParamType(String fieldName, SpecificationParamType paramType, SpecificationOperator operator) {
-        this.fieldName = fieldName;
+    ItemRequestParamType(String fieldAndFilterName, SpecificationParamType paramType, SpecificationOperator operator) {
+        this.fieldName = fieldAndFilterName;
         this.paramType = paramType;
         this.operator = operator;
     }
@@ -257,9 +257,5 @@ public enum ItemRequestParamType implements RequestParamType {
     @Override
     public SpecificationOperator operator() {
         return operator;
-    }
-
-    private interface Constants {
-        String OWNER_AGE = "owner.age";
     }
 }

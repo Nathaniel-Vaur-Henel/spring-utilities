@@ -207,7 +207,7 @@
 package fr.nvh.spring.utilities.fellowship.item;
 
 import fr.nvh.spring.utilities.WrappedListWithSize;
-import fr.nvh.spring.utilities.auto.specification.MapStringToMapEnumConverter;
+import fr.nvh.spring.utilities.auto.specification.MapStringToMapRequestParamTypeConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -218,17 +218,20 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ItemFindAllUseCase {
     private final ItemRepository itemRepository;
+    private final ItemMapper itemMapper;
 
-    public List<ItemEntity> findAll(Map<ItemRequestParamType, String> typedParams) {
+    public List<ItemDto> findAll(Map<ItemRequestParamType, String> typedParams) {
         ItemSpecification itemSpecification = new ItemSpecification(typedParams);
-        return new WrappedListWithSize<>(itemRepository.findAll(itemSpecification));
+        List<ItemEntity> all = itemRepository.findAll(itemSpecification);
+        List<ItemDto> allDto = all.stream().map(itemMapper::toDto).toList();
+        return new WrappedListWithSize<>(allDto);
     }
 
-    public List<ItemEntity> convertAndFindAll(Map<String, String> params) {
+    public List<ItemDto> convertAndFindAll(Map<String, String> params) {
         return findAll(convert(params));
     }
 
     private static Map<ItemRequestParamType, String> convert(Map<String, String> params) {
-        return MapStringToMapEnumConverter.convert(ItemRequestParamType.class, params);
+        return MapStringToMapRequestParamTypeConverter.convert(ItemRequestParamType.values(), params);
     }
 }

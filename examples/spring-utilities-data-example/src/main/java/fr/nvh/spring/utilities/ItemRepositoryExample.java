@@ -206,13 +206,12 @@
 
 package fr.nvh.spring.utilities;
 
-import fr.nvh.spring.utilities.fellowship.item.ItemEntity;
+import fr.nvh.spring.utilities.fellowship.item.ItemDto;
 import fr.nvh.spring.utilities.fellowship.item.ItemFindAllUseCase;
 import fr.nvh.spring.utilities.fellowship.item.ItemRepository;
 import fr.nvh.spring.utilities.fellowship.item.ItemRequestParamType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -220,6 +219,7 @@ import java.util.Map;
 
 /**
  * Examples of a {@link fr.nvh.spring.utilities.auto.specification.param.RequestParamType} with a dot in parameter fieldName.
+ * Examples used are the same as in {@link PersonRepositoryExample} with point of view of {@link ItemRepository} and {@link ItemFindAllUseCase}.
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -230,16 +230,18 @@ public class ItemRepositoryExample {
     void testAndLogAll() {
         log.info("* ItemRepositoryExample testAndLogAll *");
 
+        testRepositoryFindAll();
+        testFindAllUseCaseWithNoParam();
         testFindAlUseCaseWithOverSearchParam();
         testFindAlUseCaseWithContainingParam();
         testFindAllUseCaseWithEqualParam();
         testFindAllUseCaseWithEqualToNullParam();
         testFindAllUseCaseWithMinParam();
         testFindAllUseCaseWithMinAndMaxParam();
-        testFindAllUseCaseWithNotDotedParam();
+        testFindAllUseCaseWithParamWithoutDot();
     }
 
-    private void testRepositoryFindAll(ApplicationContext applicationContext) {
+    private void testRepositoryFindAll() {
         log.info("The full fellowship items: {} {}", itemRepository.count(), itemRepository.findAll());
         // Expected: The full fellowship items: 18 [Staff of Gandalf The Grey, Pipe of Gandalf The Grey, Anduril of
         // Aragorn,
@@ -249,8 +251,7 @@ public class ItemRepositoryExample {
         // Brandybuck, Dagger of Peregrin Took, Bacon of Peregrin Took]
     }
 
-    private ItemFindAllUseCase testFindAllUseCaseWithNoParam(ApplicationContext applicationContext) {
-        ItemFindAllUseCase itemFindAllUseCase = applicationContext.getBean(ItemFindAllUseCase.class);
+    private void testFindAllUseCaseWithNoParam() {
         Map<ItemRequestParamType, String> noParams = new EnumMap<>(ItemRequestParamType.class);
         log.info("The full fellowship items again: {}", itemFindAllUseCase.findAll(noParams));
         // Expected: The full fellowship items again: 18 [Staff of Gandalf The Grey, Pipe of Gandalf The Grey, Anduril
@@ -258,7 +259,6 @@ public class ItemRepositoryExample {
         // Legolas, Dwarf axe of Gimli, Dwarf helm of Gimli, One ring of Frodo Baggins, Sting of Frodo Baggins, Sam`s
         // bag of Samwise Gamegee, Mr. Bilbo`s book of Samwise Gamegee, Dagger of Meriadoc Brandybuck, Mushrooms of
         // Meriadoc Brandybuck, Dagger of Peregrin Took, Bacon of Peregrin Took]
-        return itemFindAllUseCase;
     }
 
     private void testFindAlUseCaseWithOverSearchParam() {
@@ -309,10 +309,10 @@ public class ItemRepositoryExample {
         // Elfish Bow of Legolas, Elfish knife of Legolas]
     }
 
-    private void testFindAllUseCaseWithNotDotedParam() {
+    private void testFindAllUseCaseWithParamWithoutDot() {
         Map<ItemRequestParamType, String> daggerOwnersParams = new EnumMap<>(ItemRequestParamType.class);
         daggerOwnersParams.put(ItemRequestParamType.ITEM_NAME, "Dagger");
-        List<ItemEntity> daggerOwners = itemFindAllUseCase.findAll(daggerOwnersParams);
+        List<ItemDto> daggerOwners = itemFindAllUseCase.findAll(daggerOwnersParams);
         log.info("Dagger owners: {}", daggerOwners);
         // Expected: Dagger owners: 2 [Dagger of Meriadoc Brandybuck, Dagger of Peregrin Took]
     }

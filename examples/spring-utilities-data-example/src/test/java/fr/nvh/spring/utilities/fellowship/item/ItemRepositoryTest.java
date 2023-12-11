@@ -204,36 +204,132 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities.fellowship.item;
 
+import fr.nvh.spring.utilities.fellowship.TestConstants;
+import fr.nvh.spring.utilities.fellowship.person.PersonBuilder;
+import fr.nvh.spring.utilities.fellowship.person.PersonEntity;
+import fr.nvh.spring.utilities.fellowship.person.PersonRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
+import java.util.HashMap;
+import java.util.stream.IntStream;
+
+import static fr.nvh.spring.utilities.fellowship.TestConstants.ENTITY_COUNT;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class PersonEntityTest {
+@DataJpaTest
+class ItemRepositoryTest {
 
-    @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
+    @Autowired
+    private ItemRepository itemRepository;
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
+    @Autowired
+    private PersonRepository personRepository;
+
+    @BeforeEach
+    void setUp() {
+        personRepository.deleteAll();
+        itemRepository.deleteAll();
+        IntStream.range(0, ENTITY_COUNT).forEach(value -> {
+            PersonEntity person = personRepository.saveAndFlush(PersonBuilder.buildPerson(value));
+            itemRepository.save(ItemBuilder.buildItem(value, person));
+        });
+        itemRepository.flush();
     }
 
     @Test
-    void toString_with_firstName_should_return_firstName() {
+    void findAll_should_findAll() {
+        // when
+        var result = itemRepository.findAll();
+
+        // then
+        assertThat(result).hasSize(ENTITY_COUNT);
+    }
+
+    @Test
+    void findAll_with_specification_with_no_criteria_should_findAll() {
         // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
+        var criteria = new HashMap<ItemRequestParamType, String>();
+        var itemSpecification = new ItemSpecification(criteria);
 
         // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
+        var result = itemRepository.findAll(itemSpecification);
+
+        // then
+        assertThat(result).hasSize(ENTITY_COUNT);
+    }
+
+    @Test
+    void findAll_with_specification_on_item_name_should_return_expected_items() {
+        // given
+        var criteria = new HashMap<ItemRequestParamType, String>();
+        String itemName = TestConstants.ITEM_NAME + "3";
+        criteria.put(ItemRequestParamType.ITEM_NAME, itemName);
+        var itemSpecification = new ItemSpecification(criteria);
+
+        // when
+        var result = itemRepository.findAll(itemSpecification);
+
+        // then
+        assertThat(result).hasSize(1).extracting(ItemEntity::getName).allMatch(name -> name.equals(itemName));
+    }
+
+    @Test
+    void findAll_with_specification_on_owner_age_should_return_expected_items() {
+        // given
+        var criteria = new HashMap<ItemRequestParamType, String>();
+        criteria.put(ItemRequestParamType.OWNER_MAX_AGE, "3");
+        var itemSpecification = new ItemSpecification(criteria);
+
+        // when
+        var result = itemRepository.findAll(itemSpecification);
+
+        // then
+        assertThat(result)
+                .hasSize(2)
+                .extracting(ItemEntity::getOwner)
+                .extracting(PersonEntity::getAge)
+                .allMatch(age -> age < 3);
+    }
+
+    @Test
+    void findAll_with_specification_on_owner_min_age_should_return_expected_items() {
+        // given
+        var criteria = new HashMap<ItemRequestParamType, String>();
+        criteria.put(ItemRequestParamType.OWNER_MIN_AGE, "3");
+        var itemSpecification = new ItemSpecification(criteria);
+
+        // when
+        var result = itemRepository.findAll(itemSpecification);
+
+        // then
+        assertThat(result)
+                .hasSize(3)
+                .extracting(ItemEntity::getOwner)
+                .extracting(PersonEntity::getAge)
+                .allMatch(age -> age > 3);
+    }
+
+    @Test
+    void findAll_with_specification_on_owner_min_and_max_age_should_return_expected_items() {
+        // given
+        var criteria = new HashMap<ItemRequestParamType, String>();
+        criteria.put(ItemRequestParamType.OWNER_MIN_AGE, "3");
+        criteria.put(ItemRequestParamType.OWNER_MAX_AGE, "7");
+        var itemSpecification = new ItemSpecification(criteria);
+
+        // when
+        var result = itemRepository.findAll(itemSpecification);
+
+        // then
+        assertThat(result)
+                .hasSize(2)
+                .extracting(ItemEntity::getOwner)
+                .extracting(PersonEntity::getAge)
+                .allMatch(age -> age > 3 && age < 7);
     }
 }

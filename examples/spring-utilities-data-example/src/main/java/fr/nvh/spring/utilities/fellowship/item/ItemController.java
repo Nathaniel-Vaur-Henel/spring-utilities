@@ -227,7 +227,7 @@ public class ItemController {
     private final ItemFindAllUseCase itemFindAllUseCase;
 
     @GetMapping
-    public List<ItemEntity> getAllItems(@RequestParam Map<String, String> params) {
+    public List<ItemDto> getAllItems(@RequestParam Map<String, String> params) {
         log.info("GET /api/v1/items called with {}", params);
 
         return itemFindAllUseCase.convertAndFindAll(params);

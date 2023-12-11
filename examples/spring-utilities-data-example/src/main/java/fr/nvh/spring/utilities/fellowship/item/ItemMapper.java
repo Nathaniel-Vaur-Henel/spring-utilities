@@ -204,36 +204,31 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities.fellowship.item;
 
-import org.junit.jupiter.api.Test;
+import fr.nvh.spring.utilities.DefaultMapper;
+import fr.nvh.spring.utilities.fellowship.person.PersonMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+@Component
+@RequiredArgsConstructor
+public class ItemMapper implements DefaultMapper<ItemEntity, ItemDto> {
 
-class PersonEntityTest {
+    private final PersonMapper personMapper;
 
-    @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
+    @Override
+    public ItemDto toDto(ItemEntity itemEntity) {
+        if (itemEntity == null) {
+            return null;
+        }
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
-    }
+        ItemDto itemDto = new ItemDto();
 
-    @Test
-    void toString_with_firstName_should_return_firstName() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
+        itemDto.setId(itemEntity.getId());
+        itemDto.setName(itemEntity.getName());
+        itemDto.setOwner(personMapper.toDto(itemEntity.getOwner()));
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
+        return itemDto;
     }
 }
