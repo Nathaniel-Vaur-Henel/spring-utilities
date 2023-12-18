@@ -206,7 +206,7 @@
 
 package fr.nvh.spring.utilities.fellowship.person;
 
-import fr.nvh.spring.utilities.auto.specification.MapStringToMapEnumConverter;
+import fr.nvh.spring.utilities.auto.specification.MapStringToMapRequestParamTypeConverter;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -238,7 +238,7 @@ class PersonFindAllUseCaseTest {
 
         // when
         Map<PersonRequestParamType, String> converted =
-                MapStringToMapEnumConverter.convert(PersonRequestParamType.class, params);
+                MapStringToMapRequestParamTypeConverter.convert(PersonRequestParamType.values(), params);
 
         // then
         Assertions.assertThat(converted).isEmpty();
@@ -253,24 +253,24 @@ class PersonFindAllUseCaseTest {
         var result = useCase.convertAndFindAll(params);
 
         // then
-        Assertions.assertThat(result).isEqualTo(personRepository.findAll());
+        Assertions.assertThat(result).containsExactlyElementsOf(personRepository.findAll());
     }
 
     @Test
     void findAll_and_convertAndFindAll_should_the_same_result_for_the_same_parameters() {
         // given
         String value = "theshire";
-        Map<String, String> stringTheShire = new HashMap<>();
-        stringTheShire.put("filter", value);
-        Map<PersonRequestParamType, String> enumTheShire = new HashMap<>();
-        enumTheShire.put(PersonRequestParamType.FILTER, value);
+        Map<String, String> theShireParamUsingString = new HashMap<>();
+        theShireParamUsingString.put("filter", value);
+        Map<PersonRequestParamType, String> theShireParamUsingRequestParamType = new HashMap<>();
+        theShireParamUsingRequestParamType.put(PersonRequestParamType.FILTER, value);
 
         // when
-        var resultForConverted = useCase.convertAndFindAll(stringTheShire);
-        var resultForNotConverted = useCase.findAll(enumTheShire);
+        var resultForConverted = useCase.convertAndFindAll(theShireParamUsingString);
+        var resultForNotConverted = useCase.findAll(theShireParamUsingRequestParamType);
 
         // then
-        Assertions.assertThat(resultForConverted).isEqualTo(resultForNotConverted);
+        Assertions.assertThat(resultForConverted).containsExactlyElementsOf(resultForNotConverted);
     }
 
     @Test

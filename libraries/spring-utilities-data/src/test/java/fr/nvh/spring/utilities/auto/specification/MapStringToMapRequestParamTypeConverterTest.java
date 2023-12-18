@@ -206,49 +206,129 @@
 
 package fr.nvh.spring.utilities.auto.specification;
 
-import fr.nvh.spring.utilities.auto.specification.param.RequestParamType;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import fr.nvh.spring.utilities.TestUtils;
+import fr.nvh.spring.utilities.auto.specification.commons.DefaultRequestParamType;
+import fr.nvh.spring.utilities.auto.specification.commons.ParamNameRequestParamType;
+import fr.nvh.spring.utilities.auto.specification.commons.SetRequestParamType;
+import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
-/**
- * This utility class allows to convert a simple {@link Map}<String, String> to a parametrized
- * {@link Map}<{@link RequestParamType}, String>.
- */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MapStringToMapEnumConverter {
+import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.NOT_EXISTING_PARAM;
+import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.VALUE_1;
+import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.VALUE_2;
+import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.VALUE_3;
+import static org.assertj.core.api.Assertions.assertThat;
 
-    /**
-     * Convert a {@link Map}<String, String> to an {@link EnumMap}<<code>P</code>, String> according to
-     * {@link RequestParamType#isArgumentName}.
-     *
-     * @param enumClass the {@link Class} of the request param extending {@link Enum} and {@link
-     *     RequestParamType}
-     * @param sourceParams a {@link Map}<String, String> where entries are param name
-     *     / value.
-     * @return a converted {@link EnumMap}<<code>P</code>, String> according.
-     * @param <P> request param extending {@link Enum} and {@link RequestParamType}
-     */
-    public static <P extends Enum<P> & RequestParamType> Map<P, String> convert(
-            final Class<P> enumClass, Map<String, String> sourceParams) {
-        return sourceParams.entrySet().stream()
-                .map(entry -> mapToEnumEntry(enumClass, entry))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, () -> new EnumMap<>(enumClass)));
+class MapStringToMapRequestParamTypeConverterTest {
+    @Test
+    void assert_that_is_utility_class() throws Exception {
+        TestUtils.assertThatIsUtilityClass(MapStringToMapRequestParamTypeConverter.class);
     }
 
-    private static <E extends Enum<E> & RequestParamType> Optional<Map.Entry<E, String>> mapToEnumEntry(
-            Class<E> enumClass, Map.Entry<String, String> entry) {
-        return Arrays.stream(enumClass.getEnumConstants())
-                .filter(param -> param.isArgumentName(entry.getKey()))
-                .findFirst()
-                .map(param -> Map.entry(param, entry.getValue()));
+    @Test
+    void convert_param_using_default_argument_name_should_works() {
+        // given
+        var params = new HashMap<String, String>();
+        params.put(DefaultRequestParamType.PARAM_1.fieldName(), VALUE_1);
+        params.put(DefaultRequestParamType.PARAM_2.fieldName(), VALUE_2);
+        params.put(NOT_EXISTING_PARAM, VALUE_3);
+
+        // when
+        var converted = MapStringToMapRequestParamTypeConverter.convert(
+                DefaultRequestParamType.class.getEnumConstants(), params);
+
+        // then
+        assertThat(converted)
+            .hasSize(2)
+            .containsEntry(DefaultRequestParamType.PARAM_1, VALUE_1)
+            .containsEntry(DefaultRequestParamType.PARAM_2, VALUE_2);
+    }
+
+    @Test
+    void convert_param_using_specified_argument_name_should_works() {
+        // given
+        var params = new HashMap<String, String>();
+        params.put(ParamNameRequestParamType.NAMED_PARAM_1.argumentName(), VALUE_1);
+        params.put(ParamNameRequestParamType.NAMED_PARAM_2.argumentName(), VALUE_2);
+        params.put(NOT_EXISTING_PARAM, VALUE_3);
+
+        // when
+        var converted = MapStringToMapRequestParamTypeConverter.convert(
+                ParamNameRequestParamType.class.getEnumConstants(), params);
+
+        // then
+        assertThat(converted)
+            .hasSize(2)
+            .containsEntry(ParamNameRequestParamType.NAMED_PARAM_1, VALUE_1)
+            .containsEntry(ParamNameRequestParamType.NAMED_PARAM_2, VALUE_2);
+    }
+
+    @Test
+    void convert_param_using_set_argument_names_should_works() {
+        // given
+        var params = new HashMap<String, String>();
+        params.put("filter", VALUE_1);
+        params.put("some_cases", VALUE_2);
+        params.put(NOT_EXISTING_PARAM, VALUE_3);
+
+        // when
+        var converted =
+                MapStringToMapRequestParamTypeConverter.convert(SetRequestParamType.class.getEnumConstants(), params);
+
+        // then
+        assertThat(converted)
+            .hasSize(2)
+            .containsEntry(SetRequestParamType.FILTER, VALUE_1)
+            .containsEntry(SetRequestParamType.SOME_CASES, VALUE_2);
+    }
+
+    @Test
+    void convert_param_using_another_set_argument_names_should_works() {
+        // given
+        var params = new HashMap<String, String>();
+        params.put("filtre", VALUE_1);
+        params.put("someCases", VALUE_2);
+        params.put(NOT_EXISTING_PARAM, VALUE_3);
+
+        // when
+        var converted =
+                MapStringToMapRequestParamTypeConverter.convert(SetRequestParamType.class.getEnumConstants(), params);
+
+        // then
+        assertThat(converted)
+            .hasSize(2)
+            .containsEntry(SetRequestParamType.FILTER, VALUE_1)
+            .containsEntry(SetRequestParamType.SOME_CASES, VALUE_2);
+    }
+
+    @Test
+    void convert_param_linked_same_criteria_should_works() {
+        // given
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("filtre", VALUE_1);
+        params.put("filter", VALUE_2);
+
+        // when
+        var converted =
+                MapStringToMapRequestParamTypeConverter.convert(SetRequestParamType.class.getEnumConstants(), params);
+
+        // then
+        assertThat(converted).hasSize(1).containsEntry(SetRequestParamType.FILTER, VALUE_1);
+    }
+
+    @Test
+    void unknown_value_is_ignored_without_failure() {
+        // given
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put(NOT_EXISTING_PARAM, VALUE_1);
+
+        // when
+        var converted =
+                MapStringToMapRequestParamTypeConverter.convert(SetRequestParamType.class.getEnumConstants(), params);
+
+        // then
+        assertThat(converted).isEmpty();
     }
 }

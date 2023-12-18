@@ -204,125 +204,103 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification;
+package fr.nvh.spring.utilities;
 
-import fr.nvh.spring.utilities.TestUtils;
-import fr.nvh.spring.utilities.auto.specification.commons.DefaultRequestParamType;
-import fr.nvh.spring.utilities.auto.specification.commons.ParamNameRequestParamType;
-import fr.nvh.spring.utilities.auto.specification.commons.SetRequestParamType;
-import org.junit.jupiter.api.Test;
+import fr.nvh.spring.utilities.fellowship.person.PersonEntity;
+import fr.nvh.spring.utilities.fellowship.person.PersonFindAllUseCase;
+import fr.nvh.spring.utilities.fellowship.person.PersonRepository;
+import fr.nvh.spring.utilities.fellowship.person.PersonRequestParamType;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
-import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.NOT_EXISTING_PARAM;
-import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.VALUE_1;
-import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.VALUE_2;
-import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.VALUE_3;
-import static org.assertj.core.api.Assertions.assertThat;
+/**
+ * Simple examples of a {@link fr.nvh.spring.utilities.auto.specification.param.RequestParamType}.
+ */
+@Slf4j
+@RequiredArgsConstructor
+class PersonRepositoryExample {
 
-class MapStringToMapEnumConverterTest {
-    @Test
-    void assert_that_is_utility_class() throws Exception {
-        TestUtils.assertThatIsUtilityClass(MapStringToMapEnumConverter.class);
+    private final PersonRepository personRepository;
+    private final PersonFindAllUseCase personFindAllUseCase;
+
+    void testAndLogAll() {
+        log.info("PersonRepositoryExample testAndLogAll");
+
+        testRepositoryFindAll();
+        testFindAllUseCaseWithNoParam();
+        testFindAlUseCaseWithOverSearchParam();
+        testFindAlUseCaseWithContainingParam();
+        testFindAllUseCaseWithEqualParam();
+        testFindAllUseCaseWithEqualToNullParam();
+        testFindAllUseCaseWithMinParam();
+        testFindAllUseCaseWithMinAndMaxParam();
     }
 
-    @Test
-    void convert_param_using_default_argument_name_should_works() {
-        // given
-        var params = new HashMap<String, String>();
-        params.put(DefaultRequestParamType.PARAM_1.fieldName(), VALUE_1);
-        params.put(DefaultRequestParamType.PARAM_2.fieldName(), VALUE_2);
-        params.put(NOT_EXISTING_PARAM, VALUE_3);
-
-        // when
-        var converted = MapStringToMapEnumConverter.convert(DefaultRequestParamType.class, params);
-
-        // then
-        assertThat(converted)
-            .hasSize(2)
-            .containsEntry(DefaultRequestParamType.PARAM_1, VALUE_1)
-            .containsEntry(DefaultRequestParamType.PARAM_2, VALUE_2);
+    private void testRepositoryFindAll() {
+        WrappedListWithSize<PersonEntity> allPersons = new WrappedListWithSize<>(this.personRepository.findAll());
+        log.info("The full fellowship: {}", allPersons);
+        // Expected: The full fellowship: 9 [Gandalf The Grey, Aragorn, Boromir, Legolas, Gimli, Frodo
+        // Baggins, Samwise Gamegee, Meriadoc Brandybuck, Peregrin Took]
     }
 
-    @Test
-    void convert_param_using_specified_argument_name_should_works() {
-        // given
-        var params = new HashMap<String, String>();
-        params.put(ParamNameRequestParamType.NAMED_PARAM_1.argumentName(), VALUE_1);
-        params.put(ParamNameRequestParamType.NAMED_PARAM_2.argumentName(), VALUE_2);
-        params.put(NOT_EXISTING_PARAM, VALUE_3);
-
-        // when
-        var converted = MapStringToMapEnumConverter.convert(ParamNameRequestParamType.class, params);
-
-        // then
-        assertThat(converted)
-            .hasSize(2)
-            .containsEntry(ParamNameRequestParamType.NAMED_PARAM_1, VALUE_1)
-            .containsEntry(ParamNameRequestParamType.NAMED_PARAM_2, VALUE_2);
+    private void testFindAllUseCaseWithNoParam() {
+        Map<PersonRequestParamType, String> noParams = new EnumMap<>(PersonRequestParamType.class);
+        List<PersonEntity> allPersons = personFindAllUseCase.findAll(noParams);
+        log.info("The full fellowship again: {}", allPersons);
+        // Expected: The full fellowship again: 9 [Gandalf The Grey, Aragorn, Boromir, Legolas, Gimli,
+        // Frodo Baggins, Samwise Gamegee, Meriadoc Brandybuck, Peregrin Took]
     }
 
-    @Test
-    void convert_param_using_set_argument_names_should_works() {
-        // given
-        var params = new HashMap<String, String>();
-        params.put("filter", VALUE_1);
-        params.put("some_cases", VALUE_2);
-        params.put(NOT_EXISTING_PARAM, VALUE_3);
-
-        // when
-        var converted = MapStringToMapEnumConverter.convert(SetRequestParamType.class, params);
-
-        // then
-        assertThat(converted)
-            .hasSize(2)
-            .containsEntry(SetRequestParamType.FILTER, VALUE_1)
-            .containsEntry(SetRequestParamType.SOME_CASES, VALUE_2);
+    private void testFindAlUseCaseWithOverSearchParam() {
+        Map<PersonRequestParamType, String> theShire = new EnumMap<>(PersonRequestParamType.class);
+        theShire.put(PersonRequestParamType.FILTER, "theshire");
+        List<PersonEntity> allPersons = personFindAllUseCase.findAll(theShire);
+        log.info("The Shire: {}", allPersons);
+        // Expected: The Shire: 4 [Frodo Baggins, Samwise Gamegee, Meriadoc Brandybuck, Peregrin Took]
     }
 
-    @Test
-    void convert_param_using_another_set_argument_names_should_works() {
-        // given
-        var params = new HashMap<String, String>();
-        params.put("filtre", VALUE_1);
-        params.put("someCases", VALUE_2);
-        params.put(NOT_EXISTING_PARAM, VALUE_3);
-
-        // when
-        var converted = MapStringToMapEnumConverter.convert(SetRequestParamType.class, params);
-
-        // then
-        assertThat(converted)
-            .hasSize(2)
-            .containsEntry(SetRequestParamType.FILTER, VALUE_1)
-            .containsEntry(SetRequestParamType.SOME_CASES, VALUE_2);
+    private void testFindAlUseCaseWithContainingParam() {
+        Map<PersonRequestParamType, String> erebor = new EnumMap<>(PersonRequestParamType.class);
+        erebor.put(PersonRequestParamType.EMAIL, "erebor");
+        List<PersonEntity> allPersons = personFindAllUseCase.findAll(erebor);
+        log.info("Erebor: {}", allPersons);
+        // Expected: The Shire: 1 [Gimli]
     }
 
-    @Test
-    void convert_param_linked_same_criteria_should_works() {
-        // given
-        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("filtre", VALUE_1);
-        params.put("filter", VALUE_2);
-
-        // when
-        var converted = MapStringToMapEnumConverter.convert(SetRequestParamType.class, params);
-
-        // then
-        assertThat(converted).hasSize(1).containsEntry(SetRequestParamType.FILTER, VALUE_1);
+    private void testFindAllUseCaseWithEqualParam() {
+        Map<PersonRequestParamType, String> boromir = new EnumMap<>(PersonRequestParamType.class);
+        boromir.put(PersonRequestParamType.FIRST_NAME, "Boromir");
+        List<PersonEntity> allPersons = personFindAllUseCase.findAll(boromir);
+        log.info("Boromir: {}", allPersons);
+        // Expected: Boromir: 1 [Boromir]
     }
 
-    @Test
-    void unknown_value_is_ignored_without_failure() {
-        // given
-        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put(NOT_EXISTING_PARAM, VALUE_1);
+    private void testFindAllUseCaseWithEqualToNullParam() {
+        Map<PersonRequestParamType, String> theNoLastNamed = new EnumMap<>(PersonRequestParamType.class);
+        theNoLastNamed.put(PersonRequestParamType.LAST_NAME, null);
+        List<PersonEntity> allPersons = personFindAllUseCase.findAll(theNoLastNamed);
+        log.info("They have no last name: {}", allPersons);
+        // Expected: They have no last name: 4 [Aragorn, Boromir, Legolas, Gimli]
+    }
 
-        // when
-        var converted = MapStringToMapEnumConverter.convert(SetRequestParamType.class, params);
+    private void testFindAllUseCaseWithMinParam() {
+        Map<PersonRequestParamType, String> theThousandYearOld = new EnumMap<>(PersonRequestParamType.class);
+        theThousandYearOld.put(PersonRequestParamType.MIN_AGE, "1000");
+        List<PersonEntity> allPersons = personFindAllUseCase.findAll(theThousandYearOld);
+        log.info("The thousand-year-old and more: {}", allPersons);
+        // Expected: The thousand-year-old and more: 2 [Gandalf The Grey, Legolas]
+    }
 
-        // then
-        assertThat(converted).isEmpty();
+    private void testFindAllUseCaseWithMinAndMaxParam() {
+        Map<PersonRequestParamType, String> theHundredYearOld = new EnumMap<>(PersonRequestParamType.class);
+        theHundredYearOld.put(PersonRequestParamType.MIN_AGE, "100");
+        theHundredYearOld.put(PersonRequestParamType.MAX_AGE, "200");
+        List<PersonEntity> allPersons = personFindAllUseCase.findAll(theHundredYearOld);
+        log.info("The hundred-year-old: {}", allPersons);
+        // Expected: The hundred-year-old:1  [Gimli]
     }
 }

@@ -204,78 +204,144 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification;
+package fr.nvh.spring.utilities;
 
-import fr.nvh.spring.utilities.auto.specification.param.RequestParamType;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.lang.Nullable;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
- * This {@link Specification} handle {@link RequestParamType} to build a {@link Predicate}.
- * To more information, read the documentation or look at example.
+ * A wrapper around a list that will print the size of the list before printing the list. Useful for debugging or logging.
  *
- * @param <P> param representing {@link RequestParamType}.
- * @param <E> param representing the entity.
+ * @param <T>
  */
 @RequiredArgsConstructor
-public class AutoSpecification<P extends RequestParamType, E> implements Specification<E> {
+public class WrappedListWithSize<T> implements List<T> {
 
-    /**
-     * This array contains all your {@link RequestParamType}.
-     */
-    private final P[] requestParamTypes;
-    /**
-     * This {@link Map}, with your own {@link RequestParamType} as key and String as value,
-     * contains your criteria.
-     */
-    private final Map<P, String> params;
+    private final List<T> data;
 
-    @Nullable
     @Override
-    public Predicate toPredicate(
-            @NonNull Root<E> root, @NonNull CriteriaQuery<?> query, @NonNull CriteriaBuilder builder) {
-        Optional<Map.Entry<P, String>> overSearch = overSearch();
-        if (overSearch.isPresent()) {
-            Map.Entry<P, String> entry = overSearch.get();
-            String searchValue = entry.getValue();
-            P key = entry.getKey();
-            Predicate[] predicates = Arrays.stream(requestParamTypes)
-                    .filter(RequestParamType::isOverSearchIncluded)
-                    .map(filter -> key.operator().buildPredicate(filter, root, builder, searchValue))
-                    .toArray(Predicate[]::new);
-            return builder.or(predicates);
-        } else {
-            Predicate[] predicates = Arrays.stream(requestParamTypes)
-                    .filter(params::containsKey)
-                    .map(param -> buildPredicate(root, builder, param))
-                    .toArray(Predicate[]::new);
-            return builder.and(predicates);
-        }
+    public String toString() {
+        return data.size() + " " + data;
     }
 
-    private Predicate buildPredicate(Root<E> root, CriteriaBuilder builder, P param) {
-        return param.operator().buildPredicate(param, root, builder, params.get(param));
+    @Override
+    public int size() {
+        return data.size();
     }
 
-    /**
-     * Look for a param where {@link RequestParamType#isOverSearch()} == true
-     *
-     * @return an {@link Optional} containing the first param where {@link
-     *     RequestParamType#isOverSearch()} == true or {@link Optional#isEmpty()}
-     */
-    private Optional<Map.Entry<P, String>> overSearch() {
-        return params.entrySet().stream()
-                .filter(entry -> entry.getKey().isOverSearch())
-                .findFirst();
+    @Override
+    public boolean isEmpty() {
+        return data.isEmpty();
+    }
+
+    @Override
+    public boolean contains(Object o) {
+        return data.contains(o);
+    }
+
+    @Override
+    public @NonNull Iterator<T> iterator() {
+        return data.iterator();
+    }
+
+    @Override
+    public Object @NonNull [] toArray() {
+        return data.toArray();
+    }
+
+    @Override
+    public <T1> T1 @NonNull [] toArray(T1 @NonNull [] a) {
+        return data.toArray(a);
+    }
+
+    @Override
+    public boolean add(T t) {
+        return data.add(t);
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        return data.remove(o);
+    }
+
+    @SuppressWarnings("SlowListContainsAll")
+    @Override
+    public boolean containsAll(@NonNull Collection<?> c) {
+        return data.containsAll(c);
+    }
+
+    @Override
+    public boolean addAll(@NonNull Collection<? extends T> c) {
+        return data.addAll(c);
+    }
+
+    @Override
+    public boolean addAll(int index, @NonNull Collection<? extends T> c) {
+        return data.addAll(index, c);
+    }
+
+    @Override
+    public boolean removeAll(@NonNull Collection<?> c) {
+        return data.removeAll(c);
+    }
+
+    @Override
+    public boolean retainAll(@NonNull Collection<?> c) {
+        return data.retainAll(c);
+    }
+
+    @Override
+    public void clear() {
+        data.clear();
+    }
+
+    @Override
+    public T get(int index) {
+        return data.get(index);
+    }
+
+    @Override
+    public T set(int index, T element) {
+        return data.set(index, element);
+    }
+
+    @Override
+    public void add(int index, T element) {
+        data.add(index, element);
+    }
+
+    @Override
+    public T remove(int index) {
+        return data.remove(index);
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        return data.indexOf(o);
+    }
+
+    @Override
+    public int lastIndexOf(Object o) {
+        return data.lastIndexOf(o);
+    }
+
+    @Override
+    public @NonNull ListIterator<T> listIterator() {
+        return data.listIterator();
+    }
+
+    @Override
+    public @NonNull ListIterator<T> listIterator(int index) {
+        return data.listIterator(index);
+    }
+
+    @Override
+    public @NonNull List<T> subList(int fromIndex, int toIndex) {
+        return data.subList(fromIndex, toIndex);
     }
 }

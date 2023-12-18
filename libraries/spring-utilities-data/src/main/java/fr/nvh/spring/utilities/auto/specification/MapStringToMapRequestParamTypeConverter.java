@@ -207,75 +207,46 @@
 package fr.nvh.spring.utilities.auto.specification;
 
 import fr.nvh.spring.utilities.auto.specification.param.RequestParamType;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.lang.Nullable;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
- * This {@link Specification} handle {@link RequestParamType} to build a {@link Predicate}.
- * To more information, read the documentation or look at example.
- *
- * @param <P> param representing {@link RequestParamType}.
- * @param <E> param representing the entity.
+ * This utility class allows to convert a simple {@link Map}<String, String> to a parametrized
+ * {@link Map}<{@link RequestParamType}, String>.
  */
-@RequiredArgsConstructor
-public class AutoSpecification<P extends RequestParamType, E> implements Specification<E> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class MapStringToMapRequestParamTypeConverter {
 
     /**
-     * This array contains all your {@link RequestParamType}.
-     */
-    private final P[] requestParamTypes;
-    /**
-     * This {@link Map}, with your own {@link RequestParamType} as key and String as value,
-     * contains your criteria.
-     */
-    private final Map<P, String> params;
-
-    @Nullable
-    @Override
-    public Predicate toPredicate(
-            @NonNull Root<E> root, @NonNull CriteriaQuery<?> query, @NonNull CriteriaBuilder builder) {
-        Optional<Map.Entry<P, String>> overSearch = overSearch();
-        if (overSearch.isPresent()) {
-            Map.Entry<P, String> entry = overSearch.get();
-            String searchValue = entry.getValue();
-            P key = entry.getKey();
-            Predicate[] predicates = Arrays.stream(requestParamTypes)
-                    .filter(RequestParamType::isOverSearchIncluded)
-                    .map(filter -> key.operator().buildPredicate(filter, root, builder, searchValue))
-                    .toArray(Predicate[]::new);
-            return builder.or(predicates);
-        } else {
-            Predicate[] predicates = Arrays.stream(requestParamTypes)
-                    .filter(params::containsKey)
-                    .map(param -> buildPredicate(root, builder, param))
-                    .toArray(Predicate[]::new);
-            return builder.and(predicates);
-        }
-    }
-
-    private Predicate buildPredicate(Root<E> root, CriteriaBuilder builder, P param) {
-        return param.operator().buildPredicate(param, root, builder, params.get(param));
-    }
-
-    /**
-     * Look for a param where {@link RequestParamType#isOverSearch()} == true
+     * Convert a {@link Map}<String, String> to an {@link EnumMap}<<code>P</code>, String> according to
+     * {@link RequestParamType#isArgumentName}.
      *
-     * @return an {@link Optional} containing the first param where {@link
-     *     RequestParamType#isOverSearch()} == true or {@link Optional#isEmpty()}
+     * @param <P>           request param extending {@link RequestParamType}.
+     * @param requestParamTypes an array of {@link RequestParamType} to convert to.
+     * @param sourceParams  a {@link Map}<String, String> where entries are param name / value.
+     * @return a converted {@link EnumMap}<<code>P</code>, String> according.
      */
-    private Optional<Map.Entry<P, String>> overSearch() {
-        return params.entrySet().stream()
-                .filter(entry -> entry.getKey().isOverSearch())
-                .findFirst();
+    public static <P extends RequestParamType> Map<P, String> convert(
+            P[] requestParamTypes, Map<String, String> sourceParams) {
+        return sourceParams.entrySet().stream()
+                .map(entry -> mapToEntry(requestParamTypes, entry))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
+    }
+
+    private static <E extends RequestParamType> Optional<Map.Entry<E, String>> mapToEntry(
+            E[] requestParamTypes, Map.Entry<String, String> entry) {
+        return Arrays.stream(requestParamTypes)
+                .filter(param -> param.isArgumentName(entry.getKey()))
+                .findFirst()
+                .map(param -> Map.entry(param, entry.getValue()));
     }
 }

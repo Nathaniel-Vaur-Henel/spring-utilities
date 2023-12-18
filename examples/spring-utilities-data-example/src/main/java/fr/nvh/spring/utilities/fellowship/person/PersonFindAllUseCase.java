@@ -206,7 +206,8 @@
 
 package fr.nvh.spring.utilities.fellowship.person;
 
-import fr.nvh.spring.utilities.auto.specification.MapStringToMapEnumConverter;
+import fr.nvh.spring.utilities.WrappedListWithSize;
+import fr.nvh.spring.utilities.auto.specification.MapStringToMapRequestParamTypeConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -220,7 +221,7 @@ public class PersonFindAllUseCase {
 
     public List<PersonEntity> findAll(Map<PersonRequestParamType, String> typedParams) {
         PersonSpecification personSpecification = new PersonSpecification(typedParams);
-        return personRepository.findAll(personSpecification);
+        return new WrappedListWithSize<>(personRepository.findAll(personSpecification));
     }
 
     public List<PersonEntity> convertAndFindAll(Map<String, String> params) {
@@ -228,6 +229,6 @@ public class PersonFindAllUseCase {
     }
 
     private static Map<PersonRequestParamType, String> convert(Map<String, String> params) {
-        return MapStringToMapEnumConverter.convert(PersonRequestParamType.class, params);
+        return MapStringToMapRequestParamTypeConverter.convert(PersonRequestParamType.values(), params);
     }
 }
