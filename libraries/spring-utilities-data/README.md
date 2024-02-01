@@ -120,6 +120,55 @@ with `spring.datasource.driver-class-name=org.h2.Driver` in your `application.pr
 
 - [X] nothing for now :)
 
+## Remove table suffix from Entity name
+
+### Summary
+
+- Add `spring-utilities-data` dependency to your project,
+- Add `spring.jpa.hibernate.naming.physical-strategy=fr.nvh.spring.utilities.conf.RemoveTableSuffixNamingStrategy` to your `application.properties` file,
+- Your entity class named like `PersonEntity` will now reference to `Person` database table.
+
+Simple example available at [spring-utilities-data-example](../../examples/spring-utilities-data-example).
+Especially to [application.properties](../../examples/spring-utilities-data-example/src/main/resources/application.properties).
+
+### Detailed
+
+Tired to add `@Table` just to remove your suffix entity name class of the table's name ? [RemoveTableSuffixNamingStrategy.java](src/main/java/fr/nvh/spring/utilities/conf/RemoveTableSuffixNamingStrategy.java) wil do it for you!
+
+If you use `Entity` suffix for your entity class name, you can remove it from the table name with this configuration :
+
+```properties
+# change the Naming Strategy for Hibernate, default is org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+spring.jpa.hibernate.naming.physical-strategy=fr.nvh.spring.utilities.conf.RemoveTableSuffixNamingStrategy
+```
+
+Else, you can create your own `NamingStrategy` class and use it in your `application.properties` file.
+
+```java
+import fr.nvh.spring.utilities.conf.RemoveTableSuffixNamingStrategy;
+
+public class MyCustomNamingStrategy extends RemoveTableSuffixNamingStrategy {
+
+  public MyCustomNamingStrategy() {
+    super("MyEntitySuffix");
+  }
+}
+```
+
+And in your `application.properties` file :
+
+```properties
+spring.jpa.hibernate.naming.physical-strategy=my.package.MyCustomNamingStrategy
+```
+
+Notes :
+
+- In [spring-utilities-data-example](../../examples/spring-utilities-data-example) project, we use [RemoveTableSuffixNamingStrategy.java](src/main/java/fr/nvh/spring/utilities/conf/RemoveTableSuffixNamingStrategy.java). Take a look!
+
+### To do
+
+- [X] nothing for now :)
+
 ## TestUtils
 
 ### Summary

@@ -219,7 +219,7 @@ import lombok.Setter;
 import java.io.Serializable;
 
 /** Simple entity to do test. */
-@Table(name = "person")
+@Table
 @Entity
 @Setter
 @Getter
