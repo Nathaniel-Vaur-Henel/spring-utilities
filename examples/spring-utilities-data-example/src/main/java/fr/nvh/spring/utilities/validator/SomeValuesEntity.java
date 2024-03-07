@@ -204,62 +204,38 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.param;
+package fr.nvh.spring.utilities.validator;
 
-import lombok.NonNull;
-import org.springframework.validation.Validator;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
-/**
- * This interface handles request parameters. For more information, please read the documentation and look at the example.
- */
-public interface RequestParamType extends Serializable {
-    /**
-     * @return the JPA field name.
-     */
-    String fieldName();
+/** Simple entity to do test. */
+@Table
+@Entity
+@Setter
+@Getter
+@ToString
+public class SomeValuesEntity implements Serializable {
 
-    /**
-     * @return the type of {@link SpecificationParamType}
-     */
-    @NonNull
-    SpecificationParamType paramType();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-    /**
-     * @return the type of {@link SpecificationOperator}
-     */
-    @NonNull
-    SpecificationOperator operator();
+    private String name;
+    private LocalDateTime from;
+    private LocalDateTime to;
 
-    default void validator(String argumentName) {
-    }
+    private String email;
+    private int number;
 
-    /**
-     * By default, the argumentName must match {@link RequestParamType#fieldName()} but you can
-     * override this method. </br>
-     *
-     * @return true if the argumentName matches to the {@link RequestParamType}.
-     */
-    default boolean isArgumentName(String argumentName) {
-        return fieldName().equals(argumentName);
-    }
 
-    /**
-     * <b>It is highly recommended not to implement this method.</b>
-     *
-     * @return true if {@link SpecificationParamType#OVER_SEARCH} type, false otherwise
-     */
-    default boolean isOverSearch() {
-        return paramType() == SpecificationParamType.OVER_SEARCH;
-    }
-
-    /**
-     * <b>It is highly recommended not to implement this method.</b>
-     *
-     * @return true if {@link SpecificationParamType#OVER_SEARCH_INCLUDED} type, false otherwise
-     */
-    default boolean isOverSearchIncluded() {
-        return paramType() == SpecificationParamType.OVER_SEARCH_INCLUDED;
-    }
 }

@@ -244,6 +244,7 @@ public class AutoSpecification<P extends RequestParamType, E> implements Specifi
     @Override
     public Predicate toPredicate(
             @NonNull Root<E> root, @NonNull CriteriaQuery<?> query, @NonNull CriteriaBuilder builder) {
+        validate(requestParamTypes, params);
         Optional<Map.Entry<P, String>> overSearch = overSearch();
         if (overSearch.isPresent()) {
             Map.Entry<P, String> entry = overSearch.get();
@@ -261,6 +262,18 @@ public class AutoSpecification<P extends RequestParamType, E> implements Specifi
                     .toArray(Predicate[]::new);
             return builder.and(predicates);
         }
+    }
+
+    /**
+     * This method check the validity of your params. <br>
+     * Be sure to throw your {@link RuntimeException}s
+     *
+     * @param requestParamTypes This array contains all your {@link RequestParamType}.
+     * @param params ahe {@link Map}, with your own {@link RequestParamType} as key and String as value, contains your criteria.
+     */
+    protected void validate(P[] requestParamTypes, Map<P, String> params) {
+//        Arrays.stream(requestParamTypes).map()
+        // override to add any check you want. Be sure that you throw RuntimeException
     }
 
     private Predicate buildPredicate(Root<E> root, CriteriaBuilder builder, P param) {

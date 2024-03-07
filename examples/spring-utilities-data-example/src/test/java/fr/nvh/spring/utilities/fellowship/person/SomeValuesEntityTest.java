@@ -204,62 +204,36 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.param;
+package fr.nvh.spring.utilities.fellowship.person;
 
-import lombok.NonNull;
-import org.springframework.validation.Validator;
+import org.junit.jupiter.api.Test;
 
-import java.io.Serializable;
+import static fr.nvh.spring.utilities.fellowship.person.TestConstants.FIRST_NAME;
+import static fr.nvh.spring.utilities.fellowship.person.TestConstants.LAST_NAME;
+import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * This interface handles request parameters. For more information, please read the documentation and look at the example.
- */
-public interface RequestParamType extends Serializable {
-    /**
-     * @return the JPA field name.
-     */
-    String fieldName();
+class SomeValuesEntityTest {
 
-    /**
-     * @return the type of {@link SpecificationParamType}
-     */
-    @NonNull
-    SpecificationParamType paramType();
+    @Test
+    void toString_with_lastName_and_firstName_should_return_concatenation() {
+        // given
+        var person = new PersonEntity();
+        person.setFirstName(FIRST_NAME);
+        person.setLastName(LAST_NAME);
 
-    /**
-     * @return the type of {@link SpecificationOperator}
-     */
-    @NonNull
-    SpecificationOperator operator();
-
-    default void validator(String argumentName) {
+        // when
+        String personString = person.toString();
+        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
     }
 
-    /**
-     * By default, the argumentName must match {@link RequestParamType#fieldName()} but you can
-     * override this method. </br>
-     *
-     * @return true if the argumentName matches to the {@link RequestParamType}.
-     */
-    default boolean isArgumentName(String argumentName) {
-        return fieldName().equals(argumentName);
-    }
+    @Test
+    void toString_with_firstName_should_return_firstName() {
+        // given
+        var person = new PersonEntity();
+        person.setFirstName(FIRST_NAME);
 
-    /**
-     * <b>It is highly recommended not to implement this method.</b>
-     *
-     * @return true if {@link SpecificationParamType#OVER_SEARCH} type, false otherwise
-     */
-    default boolean isOverSearch() {
-        return paramType() == SpecificationParamType.OVER_SEARCH;
-    }
-
-    /**
-     * <b>It is highly recommended not to implement this method.</b>
-     *
-     * @return true if {@link SpecificationParamType#OVER_SEARCH_INCLUDED} type, false otherwise
-     */
-    default boolean isOverSearchIncluded() {
-        return paramType() == SpecificationParamType.OVER_SEARCH_INCLUDED;
+        // when
+        String personString = person.toString();
+        assertThat(personString).isEqualTo(FIRST_NAME);
     }
 }

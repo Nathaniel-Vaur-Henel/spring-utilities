@@ -204,36 +204,41 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities.validator;
 
-import org.junit.jupiter.api.Test;
+import fr.nvh.spring.utilities.auto.specification.param.RequestParamType;
+import fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator;
+import fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
-import static fr.nvh.spring.utilities.fellowship.person.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.person.TestConstants.LAST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.EQUAL;
 
-class PersonEntityTest {
+@RequiredArgsConstructor
+public enum SomeValuesRequestParamType implements RequestParamType {
 
-    @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
+    NAME("name",  EQUAL, new NameSimpleValidator()),
+    EMAIL("email",  EQUAL, new EmailSimpleValidator());
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
+    private final String fieldName;
+    private final SpecificationOperator operator;
+    private final SimpleValidator<String> simpleValidator;
+
+    @NonNull
+    @Override
+    public String fieldName() {
+        return fieldName;
     }
 
-    @Test
-    void toString_with_firstName_should_return_firstName() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
+    @NonNull
+    @Override
+    public SpecificationParamType paramType() {
+        return SpecificationParamType.OVER_SEARCH_EXCLUDED;
+    }
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
+    @NonNull
+    @Override
+    public SpecificationOperator operator() {
+        return operator;
     }
 }

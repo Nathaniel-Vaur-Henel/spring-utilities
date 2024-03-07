@@ -208,6 +208,9 @@ package fr.nvh.spring.utilities;
 
 import fr.nvh.spring.utilities.fellowship.person.PersonFindAllUseCase;
 import fr.nvh.spring.utilities.fellowship.person.PersonRepository;
+import fr.nvh.spring.utilities.validator.EmailSimpleValidator;
+import fr.nvh.spring.utilities.validator.NameSimpleValidator;
+import fr.nvh.spring.utilities.validator.Rejections;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -228,9 +231,23 @@ public class ExampleApplication {
     public static void main(String[] args) {
         ApplicationContext applicationContext = SpringApplication.run(ExampleApplication.class, args);
 
+        NameSimpleValidator nameValidator = new NameSimpleValidator();
+        EmailSimpleValidator emailValidator = new EmailSimpleValidator();
+        Rejections rejections = new Rejections("SomeValues");
+        nameValidator.validate(null, rejections);
+        nameValidator.validate("", rejections);
+        nameValidator.validate("456645645456", rejections);
+        nameValidator.validate("1", rejections);
+        emailValidator.validate(null, rejections);
+        emailValidator.validate("null", rejections);
+        emailValidator.validate("null@null.null", rejections);
+
+        rejections.finish();
+
         PersonRepository personRepository = applicationContext.getBean(PersonRepository.class);
         PersonFindAllUseCase personFindAllUseCase = applicationContext.getBean(PersonFindAllUseCase.class);
-        PersonRepositoryExample personRepositoryExample = new PersonRepositoryExample(personRepository, personFindAllUseCase);
+        PersonRepositoryExample personRepositoryExample =
+                new PersonRepositoryExample(personRepository, personFindAllUseCase);
         personRepositoryExample.testAndLogAll();
     }
 }
