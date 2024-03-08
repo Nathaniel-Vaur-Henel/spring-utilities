@@ -1,3 +1,5 @@
 package fr.nvh.spring.utilities.validator;
 
-public record Rejection(String code, String message) {}
+import java.util.Map;
+
+public record Rejection(String code, String message, Map<String, Object> additionalParams) {}

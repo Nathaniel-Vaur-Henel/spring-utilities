@@ -229,6 +229,7 @@ public class PersonFindAllUseCase {
     }
 
     private static Map<PersonRequestParamType, String> convert(Map<String, String> params) {
-        return MapStringToMapRequestParamTypeConverter.convert(PersonRequestParamType.values(), params);
+        return MapStringToMapRequestParamTypeConverter.convertAndValidate(
+                PersonRequestParamType.values(), params, "SomeValues");
     }
 }

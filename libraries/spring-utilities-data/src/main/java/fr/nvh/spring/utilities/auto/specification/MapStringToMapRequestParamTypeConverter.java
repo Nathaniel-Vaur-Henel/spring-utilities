@@ -207,6 +207,7 @@
 package fr.nvh.spring.utilities.auto.specification;
 
 import fr.nvh.spring.utilities.auto.specification.param.RequestParamType;
+import fr.nvh.spring.utilities.validator.Rejections;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -231,15 +232,22 @@ public final class MapStringToMapRequestParamTypeConverter {
      * @param <P>           request param extending {@link RequestParamType}.
      * @param requestParamTypes an array of {@link RequestParamType} to convert to.
      * @param sourceParams  a {@link Map}<String, String> where entries are param name / value.
+     * @param rejectionName
      * @return a converted {@link EnumMap}<<code>P</code>, String> according.
      */
-    public static <P extends RequestParamType> Map<P, String> convert(
-            P[] requestParamTypes, Map<String, String> sourceParams) {
-        return sourceParams.entrySet().stream()
+    public static <P extends RequestParamType> Map<P, String> convertAndValidate(
+            P[] requestParamTypes, Map<String, String> sourceParams, String rejectionName) {
+        HashMap<P, String> params = sourceParams.entrySet().stream()
                 .map(entry -> mapToEntry(requestParamTypes, entry))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
+
+        Rejections rejections = new Rejections(rejectionName);
+        params.forEach((key, value) -> key.validator().ifPresent(validator -> validator.validate(value, rejections)));
+        rejections.finish();
+
+        return params;
     }
 
     private static <E extends RequestParamType> Optional<Map.Entry<E, String>> mapToEntry(

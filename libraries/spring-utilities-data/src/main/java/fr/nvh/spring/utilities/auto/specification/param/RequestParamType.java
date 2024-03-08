@@ -206,10 +206,11 @@
 
 package fr.nvh.spring.utilities.auto.specification.param;
 
+import fr.nvh.spring.utilities.validator.SimpleValidator;
 import lombok.NonNull;
-import org.springframework.validation.Validator;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 /**
  * This interface handles request parameters. For more information, please read the documentation and look at the example.
@@ -232,7 +233,8 @@ public interface RequestParamType extends Serializable {
     @NonNull
     SpecificationOperator operator();
 
-    default void validator(String argumentName) {
+    default Optional<SimpleValidator<String>> validator() {
+        return Optional.empty();
     }
 
     /**

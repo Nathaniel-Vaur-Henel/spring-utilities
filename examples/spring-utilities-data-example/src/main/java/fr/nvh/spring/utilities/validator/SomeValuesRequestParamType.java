@@ -212,13 +212,14 @@ import fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Optional;
+
 import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.EQUAL;
 
 @RequiredArgsConstructor
 public enum SomeValuesRequestParamType implements RequestParamType {
-
-    NAME("name",  EQUAL, new NameSimpleValidator()),
-    EMAIL("email",  EQUAL, new EmailSimpleValidator());
+    NAME("name", EQUAL, new NameSimpleValidator()),
+    EMAIL("email", EQUAL, new EmailSimpleValidator());
 
     private final String fieldName;
     private final SpecificationOperator operator;
@@ -240,5 +241,10 @@ public enum SomeValuesRequestParamType implements RequestParamType {
     @Override
     public SpecificationOperator operator() {
         return operator;
+    }
+
+    @Override
+    public Optional<SimpleValidator<String>> validator() {
+        return Optional.ofNullable(simpleValidator);
     }
 }

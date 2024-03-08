@@ -237,8 +237,8 @@ class PersonFindAllUseCaseTest {
         params.put("notParamName", "something");
 
         // when
-        Map<PersonRequestParamType, String> converted =
-                MapStringToMapRequestParamTypeConverter.convert(PersonRequestParamType.values(), params);
+        Map<PersonRequestParamType, String> converted = MapStringToMapRequestParamTypeConverter.convertAndValidate(
+                PersonRequestParamType.values(), params, "SomeValues");
 
         // then
         Assertions.assertThat(converted).isEmpty();
