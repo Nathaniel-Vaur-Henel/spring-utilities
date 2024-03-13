@@ -209,8 +209,6 @@ package fr.nvh.spring.utilities.fellowship.person;
 import fr.nvh.spring.utilities.auto.specification.param.RequestParamType;
 import fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator;
 import fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType;
-import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.Set;
@@ -240,7 +238,6 @@ public enum PersonRequestParamType implements RequestParamType {
      * This {@link Set} handle that a parameter can have several writings. You can use a simple {@link
      * String} if you just want to have a single writing for each params.
      */
-    @Getter(AccessLevel.NONE)
     private final Set<String> httpArgumentNames;
 
     PersonRequestParamType(
@@ -254,7 +251,6 @@ public enum PersonRequestParamType implements RequestParamType {
         this.httpArgumentNames = Set.of(httpArgumentNames);
     }
 
-    @NonNull
     @Override
     public String fieldName() {
         return fieldName;

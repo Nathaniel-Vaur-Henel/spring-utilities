@@ -3,7 +3,6 @@ package fr.nvh.spring.utilities.validator;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,7 @@ public class Rejections {
     }
 
     public void reject(@NonNull String code, @NonNull String message) {
-        rejectionList.add(new Rejection(code, message, Collections.emptyMap()));
+        rejectionList.add(new Rejection(code, message));
     }
 
     public void reject(@NonNull String code, @NonNull String message, Map<String, Object> additionalParams) {
