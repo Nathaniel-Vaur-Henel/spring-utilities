@@ -213,14 +213,14 @@ import jakarta.persistence.criteria.Root;
 import java.util.Objects;
 
 /** This class permits to build a {@link Predicate} with {@link SpecificationOperator#NOT_EQUAL}. */
-class PredicateFilterBuilderNotEqual implements PredicateFilterBuilder {
+class PredicateFilterBuilderNotEqual extends PredicateFilterBuilder {
     @Override
     public <T extends RequestParamType> Predicate buildPredicate(
             T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
         if (Objects.isNull(searchValue)) {
-            return builder.isNotNull(root.get(filter.fieldName()));
+            return builder.isNotNull(buildPath(root, filter.fieldName()));
         } else {
-            return builder.notEqual(root.get(filter.fieldName()), searchValue);
+            return builder.notEqual(buildPath(root, filter.fieldName()), searchValue);
         }
     }
 }

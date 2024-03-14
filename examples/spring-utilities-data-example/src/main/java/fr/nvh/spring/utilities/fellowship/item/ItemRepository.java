@@ -204,11 +204,11 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities.fellowship.item;
 
-public interface TestConstants {
-    String FIRST_NAME = "FirstName";
-    String LAST_NAME = "LastName";
-    String EMAIL = "email@mail.com";
-    int PERSONS_COUNT = 5;
-}
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ItemRepository extends JpaRepository<ItemEntity, Long>, JpaSpecificationExecutor<ItemEntity> {}

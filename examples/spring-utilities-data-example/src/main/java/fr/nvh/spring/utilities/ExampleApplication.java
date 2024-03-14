@@ -206,6 +206,8 @@
 
 package fr.nvh.spring.utilities;
 
+import fr.nvh.spring.utilities.fellowship.item.ItemFindAllUseCase;
+import fr.nvh.spring.utilities.fellowship.item.ItemRepository;
 import fr.nvh.spring.utilities.fellowship.person.PersonFindAllUseCase;
 import fr.nvh.spring.utilities.fellowship.person.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -232,5 +234,10 @@ public class ExampleApplication {
         PersonFindAllUseCase personFindAllUseCase = applicationContext.getBean(PersonFindAllUseCase.class);
         PersonRepositoryExample personRepositoryExample = new PersonRepositoryExample(personRepository, personFindAllUseCase);
         personRepositoryExample.testAndLogAll();
+
+        ItemRepository itemRepository = applicationContext.getBean(ItemRepository.class);
+        ItemFindAllUseCase itemFindAllUseCase = applicationContext.getBean(ItemFindAllUseCase.class);
+        ItemRepositoryExample itemRepositoryExample = new ItemRepositoryExample(itemRepository, itemFindAllUseCase);
+        itemRepositoryExample.testAndLogAll();
     }
 }

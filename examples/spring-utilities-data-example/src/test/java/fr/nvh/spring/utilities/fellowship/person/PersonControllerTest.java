@@ -206,22 +206,20 @@
 
 package fr.nvh.spring.utilities.fellowship.person;
 
+import fr.nvh.spring.utilities.fellowship.TestUtils;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest
+@WebMvcTest(PersonController.class)
 class PersonControllerTest {
 
     @Autowired
@@ -230,10 +228,13 @@ class PersonControllerTest {
     @MockBean
     private PersonFindAllUseCase personFindAllUseCase;
 
+    private final PersonMapper personMapper = new PersonMapper();
+
     @Test
     void getAllPersons() throws Exception {
         var personEntities = PersonBuilder.buildPersons(3);
-        Mockito.when(personFindAllUseCase.convertAndFindAll(Mockito.any())).thenReturn(personEntities);
+        Mockito.when(personFindAllUseCase.convertAndFindAll(Mockito.any()))
+                .thenReturn(TestUtils.convertToDto(personEntities, personMapper));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/persons").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)))

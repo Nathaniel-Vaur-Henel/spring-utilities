@@ -204,36 +204,45 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities.fellowship.item;
 
+import fr.nvh.spring.utilities.fellowship.person.PersonBuilder;
+import fr.nvh.spring.utilities.fellowship.person.PersonEntity;
+import fr.nvh.spring.utilities.fellowship.person.PersonMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+class ItemMapperTest {
 
-class PersonEntityTest {
+    private final ItemMapper itemMapper = new ItemMapper(new PersonMapper());
 
     @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
+    void using_item_should_correctly_mapped() {
         // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
+        PersonEntity owner = PersonBuilder.buildPerson(1);
+        ItemEntity item = ItemBuilder.buildItem(1, owner);
+        item.setId(1L);
 
         // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
+        ItemDto dto = itemMapper.toDto(item);
+
+        // then
+        Assertions.assertThat(dto)
+                .hasFieldOrPropertyWithValue("id", item.getId())
+                .hasFieldOrPropertyWithValue("name", item.getName())
+                .extracting(ItemDto::getOwner)
+                .hasFieldOrPropertyWithValue("id", owner.getId())
+                .hasFieldOrPropertyWithValue("firstName", owner.getFirstName())
+                .hasFieldOrPropertyWithValue("lastName", owner.getLastName())
+                .hasFieldOrPropertyWithValue("email", owner.getEmail())
+                .hasFieldOrPropertyWithValue("age", owner.getAge());
     }
 
     @Test
-    void toString_with_firstName_should_return_firstName() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-
+    void using_null_should_return_null() {
         // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
+        ItemDto dto = itemMapper.toDto(null);
+        // then
+        Assertions.assertThat(dto).isNull();
     }
 }

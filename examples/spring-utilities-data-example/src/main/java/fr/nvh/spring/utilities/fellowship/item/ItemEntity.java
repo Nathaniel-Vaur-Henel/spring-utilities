@@ -204,36 +204,49 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities.fellowship.item;
 
-import org.junit.jupiter.api.Test;
+import fr.nvh.spring.utilities.fellowship.person.PersonEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 
-import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.io.Serializable;
 
-class PersonEntityTest {
+/**
+ * Simple entity to do test.
+ */
+@Table(name = "item")
+@Entity
+@Setter
+@Getter
+public class ItemEntity implements Serializable {
 
-    @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
-    }
+    @NonNull
+    @Column(nullable = false)
+    private String name;
 
-    @Test
-    void toString_with_firstName_should_return_firstName() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
+    @ManyToOne(optional = false)
+    private PersonEntity owner;
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
+    /**
+     * Used by {@link fr.nvh.spring.utilities.ExampleApplication}.
+     *
+     * @return the name of the item and of his owner.
+     */
+    @Override
+    public String toString() {
+        return name + " of " + owner;
     }
 }

@@ -6,6 +6,8 @@ This module is just an example how to use feature of [spring-utilities-data](../
 
 Running [ExampleApplication.java](src/main/java/fr/nvh/spring/utilities/ExampleApplication.java) will run a server on8080 port.
 
+### Get persons
+
 You can send request at http://localhost:8080/api/v1/persons, like:
 
 - http://localhost:8080/api/v1/persons?filtre=theshire
@@ -84,3 +86,128 @@ You can send request at http://localhost:8080/api/v1/persons, like:
         }
     ]
     ```
+
+### Get items
+
+You can send request at http://localhost:8080/api/v1/items, like:
+
+- http://localhost:8080/api/v1/items?owner.filter=theshire
+  ```json
+  [
+    {
+      "id": 11,
+      "name": "One ring",
+      "owner": {
+        "id": 6,
+        "firstName": "Frodo",
+        "lastName": "Baggins",
+        "email": "frodo.baggins@theshire.ring",
+        "age": 50
+      }
+    },
+    {
+      "id": 12,
+      "name": "Sting",
+      "owner": {
+        "id": 6,
+        "firstName": "Frodo",
+        "lastName": "Baggins",
+        "email": "frodo.baggins@theshire.ring",
+        "age": 50
+      }
+    },
+    {
+      "id": 13,
+      "name": "Sam`s bag",
+      "owner": {
+        "id": 7,
+        "firstName": "Samwise",
+        "lastName": "Gamegee",
+        "email": "samwise.gamegee@theshire.ring",
+        "age": 38
+      }
+    },
+    {
+      "id": 14,
+      "name": "Mr. Bilbo`s book",
+      "owner": {
+        "id": 7,
+        "firstName": "Samwise",
+        "lastName": "Gamegee",
+        "email": "samwise.gamegee@theshire.ring",
+        "age": 38
+      }
+    },
+    {
+      "id": 15,
+      "name": "Dagger",
+      "owner": {
+        "id": 8,
+        "firstName": "Meriadoc",
+        "lastName": "Brandybuck",
+        "email": "meriadoc.brandybuck@theshire.ring",
+        "age": 37
+      }
+    },
+    {
+      "id": 16,
+      "name": "Mushrooms",
+      "owner": {
+        "id": 8,
+        "firstName": "Meriadoc",
+        "lastName": "Brandybuck",
+        "email": "meriadoc.brandybuck@theshire.ring",
+        "age": 37
+      }
+    },
+    {
+      "id": 17,
+      "name": "Dagger",
+      "owner": {
+        "id": 9,
+        "firstName": "Peregrin",
+        "lastName": "Took",
+        "email": "peregrin.took@theshire.ring",
+        "age": 28
+      }
+    },
+    {
+      "id": 18,
+      "name": "Bacon",
+      "owner": {
+        "id": 9,
+        "firstName": "Peregrin",
+        "lastName": "Took",
+        "email": "peregrin.took@theshire.ring",
+        "age": 28
+      }
+    }
+  ]  
+  ```
+- http://localhost:8080/api/v1/items?name=Dagger
+  ```json
+  [
+    {
+      "id": 15,
+      "name": "Dagger",
+      "owner": {
+        "id": 8,
+        "firstName": "Meriadoc",
+        "lastName": "Brandybuck",
+        "email": "meriadoc.brandybuck@theshire.ring",
+        "age": 37
+      }
+    },
+    {
+      "id": 17,
+      "name": "Dagger",
+      "owner": {
+        "id": 9,
+        "firstName": "Peregrin",
+        "lastName": "Took",
+        "email": "peregrin.took@theshire.ring",
+        "age": 28
+      }
+    }
+  ]
+  ```

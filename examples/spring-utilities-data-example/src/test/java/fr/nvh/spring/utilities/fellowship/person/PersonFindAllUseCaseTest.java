@@ -207,6 +207,7 @@
 package fr.nvh.spring.utilities.fellowship.person;
 
 import fr.nvh.spring.utilities.auto.specification.MapStringToMapRequestParamTypeConverter;
+import fr.nvh.spring.utilities.fellowship.TestUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -216,6 +217,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @DataJpaTest
 class PersonFindAllUseCaseTest {
@@ -223,11 +225,13 @@ class PersonFindAllUseCaseTest {
     @Autowired
     private PersonRepository personRepository;
 
+    private final PersonMapper personMapper = new PersonMapper();
+
     private PersonFindAllUseCase useCase;
 
     @BeforeEach
     void setUp() {
-        useCase = new PersonFindAllUseCase(personRepository);
+        useCase = new PersonFindAllUseCase(personRepository, personMapper);
     }
 
     @Test
@@ -253,7 +257,8 @@ class PersonFindAllUseCaseTest {
         var result = useCase.convertAndFindAll(params);
 
         // then
-        Assertions.assertThat(result).containsExactlyElementsOf(personRepository.findAll());
+        Assertions.assertThat(result)
+                .containsExactlyElementsOf(TestUtils.convertToDto(personRepository.findAll(), personMapper));
     }
 
     @Test
@@ -270,7 +275,7 @@ class PersonFindAllUseCaseTest {
         var resultForNotConverted = useCase.findAll(theShireParamUsingRequestParamType);
 
         // then
-        Assertions.assertThat(resultForConverted).containsExactlyElementsOf(resultForNotConverted);
+        Assertions.assertThat(resultForConverted).containsExactlyInAnyOrderElementsOf(resultForNotConverted);
     }
 
     @Test
@@ -284,9 +289,7 @@ class PersonFindAllUseCaseTest {
         var result = useCase.findAll(theShire);
 
         // then
-        Assertions.assertThat(result)
-                .hasSize(4)
-            .allMatch(personEntity -> TestUtils.isWellFiltered(personEntity, value));
+        Assertions.assertThat(result).hasSize(4).allMatch(personDto -> TestUtils.isWellFiltered(personDto, value));
     }
 
     @Test
@@ -302,8 +305,8 @@ class PersonFindAllUseCaseTest {
         // then
         Assertions.assertThat(result)
                 .hasSize(1)
-                .element(0)
-                .extracting(PersonEntity::getEmail)
+                .first
+                .extracting(PersonDto::getEmail)
                 .matches(email -> email.contains(value));
     }
 
@@ -313,7 +316,6 @@ class PersonFindAllUseCaseTest {
         String value = "Boromir";
         Map<PersonRequestParamType, String> boromir = new EnumMap<>(PersonRequestParamType.class);
         boromir.put(PersonRequestParamType.FIRST_NAME, value);
-        // Expected: The Shire: [Boromir]
 
         // when
         var result = useCase.findAll(boromir);
@@ -321,8 +323,8 @@ class PersonFindAllUseCaseTest {
         // then
         Assertions.assertThat(result)
                 .hasSize(1)
-                .element(0)
-                .extracting(PersonEntity::getFirstName)
+                .first
+                .extracting(PersonDto::getFirstName)
                 .matches(firstName -> firstName.contains(value));
     }
 
@@ -331,7 +333,6 @@ class PersonFindAllUseCaseTest {
         // given
         Map<PersonRequestParamType, String> theNoLastNamed = new EnumMap<>(PersonRequestParamType.class);
         theNoLastNamed.put(PersonRequestParamType.LAST_NAME, null);
-        // Expected: The Shire: [Boromir]
 
         // when
         var result = useCase.findAll(theNoLastNamed);
@@ -339,9 +340,8 @@ class PersonFindAllUseCaseTest {
         // then
         Assertions.assertThat(result)
                 .hasSize(4)
-                .element(0)
-                .extracting(PersonEntity::getLastName)
-                .isNull();
+                .extracting(PersonDto::getLastName)
+                .allMatch(Objects::isNull);
     }
 
     @Test
@@ -352,7 +352,6 @@ class PersonFindAllUseCaseTest {
         Map<PersonRequestParamType, String> theHundredYearOld = new EnumMap<>(PersonRequestParamType.class);
         theHundredYearOld.put(PersonRequestParamType.MIN_AGE, String.valueOf(minAge));
         theHundredYearOld.put(PersonRequestParamType.MAX_AGE, String.valueOf(maxAge));
-        // Expected: The Shire: [Boromir]
 
         // when
         var result = useCase.findAll(theHundredYearOld);
@@ -360,8 +359,8 @@ class PersonFindAllUseCaseTest {
         // then
         Assertions.assertThat(result)
                 .hasSize(1)
-                .element(0)
-                .extracting(PersonEntity::getAge)
+                .first
+                .extracting(PersonDto::getAge)
                 .matches(age -> age >= minAge && age <= maxAge);
     }
 
@@ -371,16 +370,26 @@ class PersonFindAllUseCaseTest {
         Map<PersonRequestParamType, String> theThousandYearOld = new EnumMap<>(PersonRequestParamType.class);
         int minAge = 1000;
         theThousandYearOld.put(PersonRequestParamType.MIN_AGE, String.valueOf(minAge));
-        // Expected: The Shire: [Boromir]
 
         // when
         var result = useCase.findAll(theThousandYearOld);
 
         // then
-        Assertions.assertThat(result)
-                .hasSize(2)
-                .element(0)
-                .extracting(PersonEntity::getAge)
-                .matches(age -> age >= minAge);
+        Assertions.assertThat(result).hasSize(2).extracting(PersonDto::getAge).allMatch(age -> age >= minAge);
+    }
+
+    @Test
+    void findAll_with_search_on_item_name_should_the_result_correctly_filtered() {
+        // given
+        Map<PersonRequestParamType, String> daggerOwners = new EnumMap<>(PersonRequestParamType.class);
+        String value = "Dagger";
+        daggerOwners.put(PersonRequestParamType.HAS, value);
+
+        // when
+        var result = useCase.findAll(daggerOwners);
+
+        // then
+        Assertions.assertThat(result).hasSize(2).allSatisfy(personDto -> Assertions.assertThat(personDto.getItemNames())
+                .contains(value));
     }
 }

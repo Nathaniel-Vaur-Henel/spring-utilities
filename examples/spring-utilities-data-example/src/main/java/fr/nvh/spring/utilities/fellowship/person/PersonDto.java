@@ -206,34 +206,41 @@
 
 package fr.nvh.spring.utilities.fellowship.person;
 
-import org.junit.jupiter.api.Test;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.io.Serializable;
+import java.util.List;
 
-class PersonEntityTest {
+/** Simple entity to do test. */
+@Setter
+@Getter
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class PersonDto implements Serializable {
 
-    @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
+    private long id;
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
-    }
+    private String firstName;
 
-    @Test
-    void toString_with_firstName_should_return_firstName() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
+    private String lastName;
+    private String email;
+    private int age;
+    private List<String> itemNames;
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
+    /**
+     * Used by {@link fr.nvh.spring.utilities.ExampleApplication}.
+     *
+     * @return the firstname and the lastname if exists.
+     */
+    @Override
+    public String toString() {
+        return firstName + (lastName == null ? "" : " " + lastName);
     }
 }

@@ -204,36 +204,19 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities.auto.specification.spring;
 
-import org.junit.jupiter.api.Test;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
 
-import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Optional;
 
-class PersonEntityTest {
-
-    @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
-
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
-    }
-
-    @Test
-    void toString_with_firstName_should_return_firstName() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
-    }
+@Repository
+public interface LinkedDancerRepository
+        extends JpaRepository<LinkedDancerEntity, Long>, JpaSpecificationExecutor<LinkedDancerEntity> {
+    /**
+     * @return the head dancer of the linked dance.
+     */
+    Optional<LinkedDancerEntity> findByLeftHandIsNull();
 }

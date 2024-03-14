@@ -204,36 +204,116 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities;
 
-import org.junit.jupiter.api.Test;
+import fr.nvh.spring.utilities.fellowship.item.ItemDto;
+import fr.nvh.spring.utilities.fellowship.item.ItemFindAllUseCase;
+import fr.nvh.spring.utilities.fellowship.item.ItemRepository;
+import fr.nvh.spring.utilities.fellowship.item.ItemRequestParamType;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
-class PersonEntityTest {
+/**
+ * Examples of a {@link fr.nvh.spring.utilities.auto.specification.param.RequestParamType} with a dot in parameter fieldName.
+ * Examples used are the same as in {@link PersonRepositoryExample} with point of view of {@link ItemRepository} and {@link ItemFindAllUseCase}.
+ */
+@Slf4j
+@RequiredArgsConstructor
+public class ItemRepositoryExample {
 
-    @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
+    private final ItemRepository itemRepository;
+    private final ItemFindAllUseCase itemFindAllUseCase;
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
+    void testAndLogAll() {
+        log.info("* ItemRepositoryExample testAndLogAll *");
+
+        testRepositoryFindAll();
+        testFindAllUseCaseWithNoParam();
+        testFindAlUseCaseWithOverSearchParam();
+        testFindAlUseCaseWithContainingParam();
+        testFindAllUseCaseWithEqualParam();
+        testFindAllUseCaseWithEqualToNullParam();
+        testFindAllUseCaseWithMinParam();
+        testFindAllUseCaseWithMinAndMaxParam();
+        testFindAllUseCaseWithParamWithoutDot();
     }
 
-    @Test
-    void toString_with_firstName_should_return_firstName() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
+    private void testRepositoryFindAll() {
+        log.info("The full fellowship items: {} {}", itemRepository.count(), itemRepository.findAll());
+        // Expected: The full fellowship items: 18 [Staff of Gandalf The Grey, Pipe of Gandalf The Grey, Anduril of
+        // Aragorn, Horn of Aragorn, Horn of Boromir, Sword of Boromir, Elfish Bow of Legolas, Elfish knife of Legolas,
+        // Dwarf axe of Gimli, Dwarf helm of Gimli, One ring of Frodo Baggins, Sting of Frodo Baggins, Sam`s bag of
+        // Samwise Gamegee, Mr. Bilbo`s book of Samwise Gamegee, Dagger of Meriadoc Brandybuck, Mushrooms of Meriadoc
+        // Brandybuck, Dagger of Peregrin Took, Bacon of Peregrin Took]
+    }
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
+    private void testFindAllUseCaseWithNoParam() {
+        Map<ItemRequestParamType, String> noParams = new EnumMap<>(ItemRequestParamType.class);
+        log.info("The full fellowship items again: {}", itemFindAllUseCase.findAll(noParams));
+        // Expected: The full fellowship items again: 18 [Staff of Gandalf The Grey, Pipe of Gandalf The Grey, Anduril
+        // of Aragorn, Horn of Aragorn, Horn of Boromir, Sword of Boromir, Elfish Bow of Legolas, Elfish knife of
+        // Legolas, Dwarf axe of Gimli, Dwarf helm of Gimli, One ring of Frodo Baggins, Sting of Frodo Baggins, Sam`s
+        // bag of Samwise Gamegee, Mr. Bilbo`s book of Samwise Gamegee, Dagger of Meriadoc Brandybuck, Mushrooms of
+        // Meriadoc Brandybuck, Dagger of Peregrin Took, Bacon of Peregrin Took]
+    }
+
+    private void testFindAlUseCaseWithOverSearchParam() {
+        Map<ItemRequestParamType, String> theShire = new EnumMap<>(ItemRequestParamType.class);
+        theShire.put(ItemRequestParamType.OWNER_FILTER, "theshire");
+        log.info("Items from the Shire: {}", itemFindAllUseCase.findAll(theShire));
+        // Expected: Items from the Shire: 8 [One ring of Frodo Baggins, Sting of Frodo Baggins, Sam`s bag of Samwise
+        // Gamegee, Mr. Bilbo`s book of Samwise Gamegee, Dagger of Meriadoc Brandybuck, Mushrooms of Meriadoc
+        // Brandybuck, Dagger of Peregrin Took, Bacon of Peregrin Took]
+    }
+
+    private void testFindAlUseCaseWithContainingParam() {
+        Map<ItemRequestParamType, String> erebor = new EnumMap<>(ItemRequestParamType.class);
+        erebor.put(ItemRequestParamType.OWNER_EMAIL, "erebor");
+        log.info("Items from Erebor: {}", itemFindAllUseCase.findAll(erebor));
+        // Expected: Items from Erebor: 2 [Dwarf axe of Gimli, Dwarf helm of Gimli]
+    }
+
+    private void testFindAllUseCaseWithEqualParam() {
+        Map<ItemRequestParamType, String> boromir = new EnumMap<>(ItemRequestParamType.class);
+        boromir.put(ItemRequestParamType.OWNER_FIRST_NAME, "Boromir");
+        log.info("Boromir's items: {}", itemFindAllUseCase.findAll(boromir));
+        // Expected: Boromir's items: 2 [Horn of Boromir, Sword of Boromir]
+    }
+
+    private void testFindAllUseCaseWithEqualToNullParam() {
+        Map<ItemRequestParamType, String> theNoLastNamed = new EnumMap<>(ItemRequestParamType.class);
+        theNoLastNamed.put(ItemRequestParamType.OWNER_LAST_NAME, null);
+        log.info("They have no last name but they have items: {}", itemFindAllUseCase.findAll(theNoLastNamed));
+        // Expected: They have no last name but they have items: 8 [Anduril of Aragorn, Horn of Aragorn, Horn of
+        // Boromir, Sword of Boromir, Elfish Bow of Legolas, Elfish knife of Legolas, Dwarf axe of Gimli, Dwarf helm
+        // of Gimli]
+    }
+
+    private void testFindAllUseCaseWithMinParam() {
+        Map<ItemRequestParamType, String> theHundredYearOld = new EnumMap<>(ItemRequestParamType.class);
+        theHundredYearOld.put(ItemRequestParamType.OWNER_MIN_AGE, "100");
+        theHundredYearOld.put(ItemRequestParamType.OWNER_MAX_AGE, "200");
+        log.info("Items of the hundred-year-old: {}", itemFindAllUseCase.findAll(theHundredYearOld));
+        // Expected: Items of the hundred-year-old: 2 [Dwarf axe of Gimli, Dwarf helm of Gimli]
+    }
+
+    private void testFindAllUseCaseWithMinAndMaxParam() {
+        Map<ItemRequestParamType, String> theThousandYearOld = new EnumMap<>(ItemRequestParamType.class);
+        theThousandYearOld.put(ItemRequestParamType.OWNER_MIN_AGE, "1000");
+        log.info("Items of the thousand-year-old and more: {}", itemFindAllUseCase.findAll(theThousandYearOld));
+        // Expected: Items of the thousand-year-old and more: 4 [Staff of Gandalf The Grey, Pipe of Gandalf The Grey,
+        // Elfish Bow of Legolas, Elfish knife of Legolas]
+    }
+
+    private void testFindAllUseCaseWithParamWithoutDot() {
+        Map<ItemRequestParamType, String> daggerOwnersParams = new EnumMap<>(ItemRequestParamType.class);
+        daggerOwnersParams.put(ItemRequestParamType.ITEM_NAME, "Dagger");
+        List<ItemDto> daggerOwners = itemFindAllUseCase.findAll(daggerOwnersParams);
+        log.info("Dagger owners: {}", daggerOwners);
+        // Expected: Dagger owners: 2 [Dagger of Meriadoc Brandybuck, Dagger of Peregrin Took]
     }
 }

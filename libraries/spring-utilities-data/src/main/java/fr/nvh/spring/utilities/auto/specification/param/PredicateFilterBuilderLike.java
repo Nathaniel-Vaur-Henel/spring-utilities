@@ -211,10 +211,10 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
 /** This class permits to build a {@link Predicate} with {@link SpecificationOperator#LIKE}. */
-class PredicateFilterBuilderLike implements PredicateFilterBuilder {
+class PredicateFilterBuilderLike extends PredicateFilterBuilder {
     @Override
     public <T extends RequestParamType> Predicate buildPredicate(
             T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
-        return builder.like(root.get(filter.fieldName()), searchValue);
+        return builder.like(buildPath(root, filter.fieldName()), searchValue);
     }
 }

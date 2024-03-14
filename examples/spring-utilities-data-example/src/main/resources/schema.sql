@@ -6,3 +6,10 @@ CREATE TABLE person (
   age bigint
 );
 
+CREATE TABLE item (
+  id bigint auto_increment,
+  name VARCHAR NOT NULL,
+  owner_id bigint --,
+--        FOREIGN KEY(person_id)        REFERENCES person(id)
+);
+

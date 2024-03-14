@@ -204,36 +204,34 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities.fellowship;
 
-import org.junit.jupiter.api.Test;
+import fr.nvh.spring.utilities.DefaultMapper;
+import fr.nvh.spring.utilities.fellowship.person.PersonDto;
+import lombok.NoArgsConstructor;
 
-import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.List;
 
-class PersonEntityTest {
-
-    @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
-
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+public class TestUtils {
+    public static boolean notNullAndContains(String value, String searchedValue) {
+        return value != null && value.contains(searchedValue);
     }
 
-    @Test
-    void toString_with_firstName_should_return_firstName() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
+    public static boolean isWellFiltered(PersonDto person, String searchedValue) {
+        return notNullAndContains(person.getEmail(), searchedValue)
+                || notNullAndContains(person.getFirstName(), searchedValue)
+                || notNullAndContains(person.getLastName(), searchedValue);
+    }
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
+    public static <E, D> List<D> convertToDto(List<E> entities, DefaultMapper<E, D> mapper) {
+        return entities.stream().map(mapper::toDto).toList();
+    }
+
+    public static PersonDto buildPersonDto() {
+        return PersonDto.builder()
+                .firstName(TestConstants.FIRST_NAME)
+                .lastName(TestConstants.LAST_NAME)
+                .build();
     }
 }

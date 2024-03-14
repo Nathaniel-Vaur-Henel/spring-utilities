@@ -222,6 +222,7 @@ import java.util.ListIterator;
 @RequiredArgsConstructor
 public class WrappedListWithSize<T> implements List<T> {
 
+    @NonNull
     private final List<T> data;
 
     @Override
