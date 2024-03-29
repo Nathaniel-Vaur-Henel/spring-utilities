@@ -204,7 +204,7 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.spring;
+package io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.spring;
 
 import java.util.List;
 import java.util.stream.IntStream;

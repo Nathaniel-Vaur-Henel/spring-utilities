@@ -204,7 +204,7 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person;
 
 public class TestUtils {
     static boolean notNullAndContains(String value, String searchedValue) {

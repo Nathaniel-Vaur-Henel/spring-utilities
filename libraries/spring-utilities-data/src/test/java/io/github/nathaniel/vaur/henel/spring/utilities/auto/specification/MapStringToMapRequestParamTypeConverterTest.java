@@ -204,21 +204,21 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification;
+package io.github.nathaniel.vaur.henel.spring.utilities.auto.specification;
 
-import fr.nvh.spring.utilities.TestUtils;
-import fr.nvh.spring.utilities.auto.specification.commons.DefaultRequestParamType;
-import fr.nvh.spring.utilities.auto.specification.commons.ParamNameRequestParamType;
-import fr.nvh.spring.utilities.auto.specification.commons.SetRequestParamType;
+import io.github.nathaniel.vaur.henel.spring.utilities.TestUtils;
+import io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.commons.DefaultRequestParamType;
+import io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.commons.ParamNameRequestParamType;
+import io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.commons.SetRequestParamType;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.NOT_EXISTING_PARAM;
-import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.VALUE_1;
-import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.VALUE_2;
-import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.VALUE_3;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.commons.TestConstants.NOT_EXISTING_PARAM;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.commons.TestConstants.VALUE_1;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.commons.TestConstants.VALUE_2;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.commons.TestConstants.VALUE_3;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MapStringToMapRequestParamTypeConverterTest {

@@ -204,7 +204,7 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

@@ -204,9 +204,9 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person;
 
-import fr.nvh.spring.utilities.auto.specification.MapStringToMapRequestParamTypeConverter;
+import io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.MapStringToMapRequestParamTypeConverter;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

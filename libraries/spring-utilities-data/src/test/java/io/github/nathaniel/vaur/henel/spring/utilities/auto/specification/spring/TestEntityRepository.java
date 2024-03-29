@@ -204,7 +204,7 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.spring;
+package io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.spring;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

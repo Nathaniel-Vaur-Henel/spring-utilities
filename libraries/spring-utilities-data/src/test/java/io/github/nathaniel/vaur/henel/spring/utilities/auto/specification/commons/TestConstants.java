@@ -204,7 +204,7 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.commons;
+package io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.commons;
 
 public interface TestConstants {
     String NOT_EXISTING_PARAM = "notExistingParam";

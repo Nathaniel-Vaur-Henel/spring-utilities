@@ -204,17 +204,17 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person;
 
-import fr.nvh.spring.utilities.WrappedListWithSize;
+import io.github.nathaniel.vaur.henel.spring.utilities.WrappedListWithSize;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.stream.IntStream;
 
-import static fr.nvh.spring.utilities.fellowship.person.TestConstants.EMAIL;
-import static fr.nvh.spring.utilities.fellowship.person.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.person.TestConstants.LAST_NAME;
+import static io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person.TestConstants.EMAIL;
+import static io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person.TestConstants.FIRST_NAME;
+import static io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person.TestConstants.LAST_NAME;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PersonBuilder {

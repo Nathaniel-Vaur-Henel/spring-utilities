@@ -204,15 +204,15 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.commons;
+package io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.commons;
 
-import fr.nvh.spring.utilities.auto.specification.param.RequestParamType;
-import fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator;
-import fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType;
+import io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.RequestParamType;
+import io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationOperator;
+import io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationParamType;
 import lombok.NonNull;
 
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.EQUAL;
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_EXCLUDED;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationOperator.EQUAL;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_EXCLUDED;
 
 public enum ParamNameRequestParamType implements RequestParamType {
     NAMED_PARAM_1("namedParam1", OVER_SEARCH_EXCLUDED, EQUAL, "named_param_1"),

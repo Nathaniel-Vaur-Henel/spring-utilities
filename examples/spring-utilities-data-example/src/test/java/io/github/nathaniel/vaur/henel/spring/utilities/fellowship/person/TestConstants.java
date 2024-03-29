@@ -204,7 +204,7 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person;
 
 public interface TestConstants {
     String FIRST_NAME = "FirstName";

@@ -204,7 +204,7 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -213,7 +213,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.HashMap;
 
-import static fr.nvh.spring.utilities.fellowship.person.TestConstants.PERSONS_COUNT;
+import static io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person.TestConstants.PERSONS_COUNT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest

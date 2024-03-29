@@ -204,12 +204,12 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person;
 
 import org.junit.jupiter.api.Test;
 
-import static fr.nvh.spring.utilities.fellowship.person.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.person.TestConstants.LAST_NAME;
+import static io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person.TestConstants.FIRST_NAME;
+import static io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person.TestConstants.LAST_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PersonEntityTest {

@@ -204,14 +204,14 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.spring;
+package io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.spring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan("fr.nvh.spring.utilities.auto.specification.spring")
+@ComponentScan("io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.spring")
 public class TestApplication {
 
     public static void main(String[] args) {

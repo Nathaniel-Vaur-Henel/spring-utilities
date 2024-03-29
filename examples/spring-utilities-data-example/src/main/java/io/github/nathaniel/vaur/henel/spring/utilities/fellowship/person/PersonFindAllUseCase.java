@@ -204,10 +204,10 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person;
 
-import fr.nvh.spring.utilities.WrappedListWithSize;
-import fr.nvh.spring.utilities.auto.specification.MapStringToMapRequestParamTypeConverter;
+import io.github.nathaniel.vaur.henel.spring.utilities.WrappedListWithSize;
+import io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.MapStringToMapRequestParamTypeConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

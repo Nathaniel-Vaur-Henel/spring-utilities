@@ -204,7 +204,7 @@
  *
  */
 
-package fr.nvh.spring.utilities;
+package io.github.nathaniel.vaur.henel.spring.utilities;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

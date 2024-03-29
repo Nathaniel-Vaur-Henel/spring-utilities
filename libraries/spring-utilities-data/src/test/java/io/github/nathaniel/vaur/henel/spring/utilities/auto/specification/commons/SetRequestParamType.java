@@ -204,20 +204,20 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.commons;
+package io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.commons;
 
-import fr.nvh.spring.utilities.auto.specification.param.RequestParamType;
-import fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator;
-import fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType;
+import io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.RequestParamType;
+import io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationOperator;
+import io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationParamType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.Set;
 
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.CONTAINING;
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.EQUAL;
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_EXCLUDED;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationOperator.CONTAINING;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationOperator.EQUAL;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_EXCLUDED;
 
 public enum SetRequestParamType implements RequestParamType {
     FILTER(null, OVER_SEARCH_EXCLUDED, CONTAINING, "filter", "filtre"),

@@ -204,9 +204,9 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification;
+package io.github.nathaniel.vaur.henel.spring.utilities.auto.specification;
 
-import fr.nvh.spring.utilities.auto.specification.param.RequestParamType;
+import io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.RequestParamType;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;

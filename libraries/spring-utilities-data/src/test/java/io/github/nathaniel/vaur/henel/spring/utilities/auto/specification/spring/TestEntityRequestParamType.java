@@ -204,25 +204,25 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.spring;
+package io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.spring;
 
-import fr.nvh.spring.utilities.auto.specification.param.RequestParamType;
-import fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator;
-import fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType;
+import io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.RequestParamType;
+import io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationOperator;
+import io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationParamType;
 import lombok.NonNull;
 
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.CONTAINING;
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.EQUAL;
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.GREATER;
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.GREATER_OR_EQUAL;
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.LESS;
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.LESS_OR_EQUAL;
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.LIKE;
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.NOT_EQUAL;
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.NOT_LIKE;
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH;
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_EXCLUDED;
-import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_INCLUDED;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationOperator.CONTAINING;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationOperator.EQUAL;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationOperator.GREATER;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationOperator.GREATER_OR_EQUAL;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationOperator.LESS;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationOperator.LESS_OR_EQUAL;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationOperator.LIKE;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationOperator.NOT_EQUAL;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationOperator.NOT_LIKE;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_EXCLUDED;
+import static io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_INCLUDED;
 
 public enum TestEntityRequestParamType implements RequestParamType {
     GLOBAL_CONTAINING(null, OVER_SEARCH, CONTAINING),

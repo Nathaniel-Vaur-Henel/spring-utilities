@@ -204,12 +204,12 @@
  *
  */
 
-package fr.nvh.spring.utilities;
+package io.github.nathaniel.vaur.henel.spring.utilities;
 
-import fr.nvh.spring.utilities.fellowship.person.PersonEntity;
-import fr.nvh.spring.utilities.fellowship.person.PersonFindAllUseCase;
-import fr.nvh.spring.utilities.fellowship.person.PersonRepository;
-import fr.nvh.spring.utilities.fellowship.person.PersonRequestParamType;
+import io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person.PersonEntity;
+import io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person.PersonFindAllUseCase;
+import io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person.PersonRepository;
+import io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person.PersonRequestParamType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -218,7 +218,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Simple examples of a {@link fr.nvh.spring.utilities.auto.specification.param.RequestParamType}.
+ * Simple examples of a {@link io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param.RequestParamType}.
  */
 @Slf4j
 @RequiredArgsConstructor

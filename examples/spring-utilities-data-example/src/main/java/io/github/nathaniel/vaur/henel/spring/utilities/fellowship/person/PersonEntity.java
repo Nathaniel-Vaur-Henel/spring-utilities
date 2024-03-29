@@ -204,7 +204,7 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -238,7 +238,7 @@ public class PersonEntity implements Serializable {
     private int age;
 
     /**
-     * Used by {@link fr.nvh.spring.utilities.ExampleApplication}.
+     * Used by {@link io.github.nathaniel.vaur.henel.spring.utilities.ExampleApplication}.
      *
      * @return the firstname and the lastname if exists.
      */

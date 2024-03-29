@@ -1,4 +1,4 @@
-package fr.nvh.spring.utilities.conf;
+package io.github.nathaniel.vaur.henel.spring.utilities.conf;
 
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
 import org.hibernate.boot.model.naming.Identifier;

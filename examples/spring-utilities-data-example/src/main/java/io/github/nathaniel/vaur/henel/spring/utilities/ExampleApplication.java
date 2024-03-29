@@ -204,10 +204,10 @@
  *
  */
 
-package fr.nvh.spring.utilities;
+package io.github.nathaniel.vaur.henel.spring.utilities;
 
-import fr.nvh.spring.utilities.fellowship.person.PersonFindAllUseCase;
-import fr.nvh.spring.utilities.fellowship.person.PersonRepository;
+import io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person.PersonFindAllUseCase;
+import io.github.nathaniel.vaur.henel.spring.utilities.fellowship.person.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

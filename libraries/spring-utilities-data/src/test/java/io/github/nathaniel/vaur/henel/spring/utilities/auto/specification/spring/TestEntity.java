@@ -204,7 +204,7 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.spring;
+package io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.spring;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

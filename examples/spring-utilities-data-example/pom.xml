@@ -10,22 +10,57 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>fr.nvh.spring-utilities</groupId>
-    <version>1.3.0</version>
+    <groupId>io.github.nathaniel.vaur.henel</groupId>
     <artifactId>spring-utilities-data-example</artifactId>
+    <version>1.3.0</version>
+    <name>Spring Utilities Data - Examples</name>
+    <description>Examples to use Spring Utilities Data</description>
+    <url>https://github.com/Nathaniel-Vaur-Henel/spring-utilities</url>
+
+    <scm>
+        <connection>scm:git:git://github.com/Nathaniel-Vaur-Henel/spring-utilities.git</connection>
+        <developerConnection>scm:git:ssh://github.com:Nathaniel-Vaur-Henel/spring-utilities.git</developerConnection>
+        <url>https://github.com/Nathaniel-Vaur-Henel/spring-utilities</url>
+    </scm>
+    <inceptionYear>2023</inceptionYear>
+
+    <developers>
+        <developer>
+            <name>Nathaniel Vaur Henel</name>
+            <email>nathaniel.vaur.henel@gmail.com</email>
+            <url>https://nathaniel-vaur-henel.github.io</url>
+            <roles>
+                <role>Creator</role>
+                <role>Main contributor</role>
+            </roles>
+            <timezone>Europe/Paris</timezone>
+        </developer>
+    </developers>
+
+    <contributors>
+        <contributor>
+            <name>Charles Lesage</name>
+            <url>https://github.com/cclesage</url>
+            <roles>
+                <role>Reviewer</role>
+            </roles>
+            <timezone>Europe/Paris</timezone>
+        </contributor>
+    </contributors>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit-jupiter.version>5.9.3</junit-jupiter.version>
-        <pitest.version>1.14.2</pitest.version>
-        <spring-utilities-data.version>1.0.0</spring-utilities-data.version>
+
+        <pitest.version>1.15.6</pitest.version>
+        <junit-jupiter.version>5.10.1</junit-jupiter.version>
+        <pitest-junit5-plugin.version>1.1.1</pitest-junit5-plugin.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>fr.nvh.spring-utilities</groupId>
+            <groupId>io.github.nathaniel.vaur.henel</groupId>
             <artifactId>spring-utilities-data</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -94,7 +129,7 @@
                     <dependency>
                         <groupId>org.pitest</groupId>
                         <artifactId>pitest-junit5-plugin</artifactId>
-                        <version>1.1.1</version>
+                        <version>${pitest-junit5-plugin.version}</version>
                     </dependency>
                 </dependencies>
                 <configuration>
@@ -128,5 +163,4 @@
 
         </plugins>
     </build>
-
 </project>

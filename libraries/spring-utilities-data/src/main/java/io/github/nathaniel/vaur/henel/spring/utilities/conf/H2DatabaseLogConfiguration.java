@@ -204,7 +204,7 @@
  *
  */
 
-package fr.nvh.spring.utilities.conf;
+package io.github.nathaniel.vaur.henel.spring.utilities.conf;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;

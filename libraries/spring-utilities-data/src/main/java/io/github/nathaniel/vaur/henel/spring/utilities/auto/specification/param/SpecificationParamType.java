@@ -204,7 +204,7 @@
  *
  */
 
-package fr.nvh.spring.utilities.auto.specification.param;
+package io.github.nathaniel.vaur.henel.spring.utilities.auto.specification.param;
 
 /** The enum contains all over search */
 public enum SpecificationParamType {
