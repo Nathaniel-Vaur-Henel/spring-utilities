@@ -47,14 +47,19 @@
 
     <modules>
         <module>spring-utilities-data</module>
+        <module>spring-utilities-hibernate-generate</module>
     </modules>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <java.version>17</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-boot-starter-parent.version>3.1.0</spring-boot-starter-parent.version>
+        <spring-boot-starter-parent.version>3.2.4</spring-boot-starter-parent.version>
         <pitest.version>1.14.2</pitest.version>
+        <javapoet.version>1.13.0</javapoet.version>
+        <auto-service.version>1.1.1</auto-service.version>
+        <compile-testing.version>0.21.0</compile-testing.version>
     </properties>
 
     <dependencyManagement>
@@ -65,6 +70,24 @@
                 <version>${spring-boot-starter-parent.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup</groupId>
+                <artifactId>javapoet</artifactId>
+                <version>${javapoet.version}</version>
+            </dependency>
+            <!-- Provided -->
+            <dependency>
+                <groupId>com.google.auto.service</groupId>
+                <artifactId>auto-service</artifactId>
+                <version>${auto-service.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.testing.compile</groupId>
+                <artifactId>compile-testing</artifactId>
+                <version>${compile-testing.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
