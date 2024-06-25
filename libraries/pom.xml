@@ -47,6 +47,7 @@
 
     <modules>
         <module>spring-utilities-data</module>
+        <module>spring-utilities-web</module>
     </modules>
 
     <properties>
