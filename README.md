@@ -1,3 +1,7 @@
+🛑 This project has been migrated to [Framagit](https://framagit.org/nathvh/spring-utilities).  
+This repository is archived and will no longer receive updates.
+
+
 # Spring Utilities
 
 > Write Once, Use Anywhere.    
