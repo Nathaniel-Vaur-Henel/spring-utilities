@@ -211,10 +211,10 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
 /** This class permits to build a {@link Predicate} with {@link SpecificationOperator#LESS}. */
-class PredicateFilterBuilderLess implements PredicateFilterBuilder {
+class PredicateFilterBuilderLess extends PredicateFilterBuilder {
     @Override
     public <T extends RequestParamType> Predicate buildPredicate(
             T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
-        return builder.lessThan(root.get(filter.fieldName()), searchValue);
+        return builder.lessThan(buildPath(root, filter.fieldName()), searchValue);
     }
 }

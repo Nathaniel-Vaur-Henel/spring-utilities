@@ -204,36 +204,200 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities.fellowship.item;
 
+import fr.nvh.spring.utilities.auto.specification.MapStringToMapRequestParamTypeConverter;
+import fr.nvh.spring.utilities.fellowship.TestUtils;
+import fr.nvh.spring.utilities.fellowship.person.PersonDto;
+import fr.nvh.spring.utilities.fellowship.person.PersonMapper;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
-class PersonEntityTest {
+@DataJpaTest
+class ItemFindAllUseCaseTest {
 
-    @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
+    @Autowired
+    private ItemRepository itemRepository;
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
+    private final ItemMapper itemMapper = new ItemMapper(new PersonMapper());
+
+    private ItemFindAllUseCase useCase;
+
+    @BeforeEach
+    void setUp() {
+        useCase = new ItemFindAllUseCase(itemRepository, itemMapper);
     }
 
     @Test
-    void toString_with_firstName_should_return_firstName() {
+    void convert_map_params_with_no_matching_argument_should_return_empty_parametrized_map() {
         // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
+        Map<String, String> params = new HashMap<>();
+        params.put("notParamName", "something");
 
         // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
+        Map<ItemRequestParamType, String> converted =
+                MapStringToMapRequestParamTypeConverter.convert(ItemRequestParamType.values(), params);
+
+        // then
+        Assertions.assertThat(converted).isEmpty();
+    }
+
+    @Test
+    void findAll_with_no_param_should_return_same_result_than_default_findAll() {
+        // given
+        Map<String, String> params = new HashMap<>();
+
+        // when
+        var result = useCase.convertAndFindAll(params);
+
+        // then
+        Assertions.assertThat(result)
+                .containsExactlyElementsOf(TestUtils.convertToDto(itemRepository.findAll(), itemMapper));
+    }
+
+    @Test
+    void findAll_and_convertAndFindAll_should_the_same_result_for_the_same_parameters() {
+        // given
+        String value = "theshire";
+        Map<String, String> stringTheShire = new HashMap<>();
+        stringTheShire.put("owner.filter", value);
+        Map<ItemRequestParamType, String> mapTheShire = new HashMap<>();
+        mapTheShire.put(ItemRequestParamType.OWNER_FILTER, value);
+
+        // when
+        var resultForConverted = useCase.convertAndFindAll(stringTheShire);
+        var resultForNotConverted = useCase.findAll(mapTheShire);
+
+        // then
+        Assertions.assertThat(resultForConverted).containsExactlyInAnyOrderElementsOf(resultForNotConverted);
+    }
+
+    @Test
+    void findAll_with_global_filter_should_the_result_correctly_filtered() {
+        // given
+        String value = "theshire";
+        Map<ItemRequestParamType, String> theShire = new HashMap<>();
+        theShire.put(ItemRequestParamType.OWNER_FILTER, value);
+
+        // when
+        var result = useCase.findAll(theShire);
+
+        // then
+        Assertions.assertThat(result)
+                .hasSize(8)
+                .allMatch(itemDto -> TestUtils.isWellFiltered(itemDto.getOwner(), value));
+    }
+
+    @Test
+    void findAll_with_search_on_email_should_the_result_correctly_filtered() {
+        // given
+        Map<ItemRequestParamType, String> erebor = new EnumMap<>(ItemRequestParamType.class);
+        String value = "erebor";
+        erebor.put(ItemRequestParamType.OWNER_EMAIL, value);
+
+        // when
+        var result = useCase.findAll(erebor);
+
+        // then
+        Assertions.assertThat(result)
+                .hasSize(2)
+                .extracting(ItemDto::getOwner)
+                .extracting(PersonDto::getEmail)
+                .allMatch(email -> email.contains(value));
+    }
+
+    @Test
+    void findAll_with_search_on_item_name_should_the_result_correctly_filtered() {
+        // given
+        Map<ItemRequestParamType, String> dagger = new EnumMap<>(ItemRequestParamType.class);
+        String value = "Dagger";
+        dagger.put(ItemRequestParamType.ITEM_NAME, value);
+
+        // when
+        var result = useCase.findAll(dagger);
+
+        // then
+        Assertions.assertThat(result).hasSize(2).extracting(ItemDto::getName).allMatch(name -> name.equals(value));
+    }
+
+    @Test
+    void findAll_with_search_on_first_name_should_the_result_correctly_filtered() {
+        // given
+        String value = "Boromir";
+        Map<ItemRequestParamType, String> boromir = new EnumMap<>(ItemRequestParamType.class);
+        boromir.put(ItemRequestParamType.OWNER_FIRST_NAME, value);
+
+        // when
+        var result = useCase.findAll(boromir);
+
+        // then
+        Assertions.assertThat(result)
+                .hasSize(2)
+                .extracting(ItemDto::getOwner)
+                .extracting(PersonDto::getFirstName)
+                .allMatch(firstName -> firstName.equals(value));
+    }
+
+    @Test
+    void findAll_with_search_on_last_name_should_the_result_correctly_filtered() {
+        // given
+        Map<ItemRequestParamType, String> theNoLastNamed = new EnumMap<>(ItemRequestParamType.class);
+        theNoLastNamed.put(ItemRequestParamType.OWNER_LAST_NAME, null);
+
+        // when
+        var result = useCase.findAll(theNoLastNamed);
+
+        // then
+        Assertions.assertThat(result)
+                .hasSize(8)
+                .first
+                .extracting(ItemDto::getOwner)
+                .extracting(PersonDto::getLastName)
+                .isNull();
+    }
+
+    @Test
+    void findAll_with_search_on_min_and_max_age_should_the_result_correctly_filtered() {
+        // given
+        int minAge = 100;
+        int maxAge = 200;
+        Map<ItemRequestParamType, String> theHundredYearOld = new EnumMap<>(ItemRequestParamType.class);
+        theHundredYearOld.put(ItemRequestParamType.OWNER_MIN_AGE, String.valueOf(minAge));
+        theHundredYearOld.put(ItemRequestParamType.OWNER_MAX_AGE, String.valueOf(maxAge));
+
+        // when
+        var result = useCase.findAll(theHundredYearOld);
+
+        // then
+        Assertions.assertThat(result)
+                .hasSize(2)
+                .extracting(ItemDto::getOwner)
+                .extracting(PersonDto::getAge)
+                .allMatch(age -> age >= minAge && age <= maxAge);
+    }
+
+    @Test
+    void findAll_with_search_on_min_age_should_the_result_correctly_filtered() {
+        // given
+        Map<ItemRequestParamType, String> theThousandYearOld = new EnumMap<>(ItemRequestParamType.class);
+        int minAge = 1000;
+        theThousandYearOld.put(ItemRequestParamType.OWNER_MIN_AGE, String.valueOf(minAge));
+
+        // when
+        var result = useCase.findAll(theThousandYearOld);
+
+        // then
+        Assertions.assertThat(result)
+                .hasSize(4)
+                .extracting(ItemDto::getOwner)
+                .extracting(PersonDto::getAge)
+                .allMatch(age -> age >= minAge);
     }
 }

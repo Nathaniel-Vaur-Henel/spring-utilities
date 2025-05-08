@@ -213,14 +213,16 @@ import jakarta.persistence.criteria.Root;
 import java.util.Objects;
 
 /** This class permits to build a {@link Predicate} with {@link SpecificationOperator#EQUAL}. */
-class PredicateFilterBuilderEqual implements PredicateFilterBuilder {
+class PredicateFilterBuilderEqual extends PredicateFilterBuilder {
     @Override
     public <T extends RequestParamType> Predicate buildPredicate(
             T filter, Root<?> root, CriteriaBuilder builder, String searchValue) {
         if (Objects.isNull(searchValue)) {
-            return builder.isNull(root.get(filter.fieldName()));
+            return builder.isNull(buildPath(root, filter.fieldName()));
         } else {
-            return builder.equal(root.get(filter.fieldName()), searchValue);
+            return builder.equal(buildPath(root, filter.fieldName()), searchValue);
         }
     }
+
+
 }

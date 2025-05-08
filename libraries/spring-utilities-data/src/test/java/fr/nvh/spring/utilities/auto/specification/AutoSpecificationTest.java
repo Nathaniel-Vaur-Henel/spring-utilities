@@ -206,25 +206,40 @@
 
 package fr.nvh.spring.utilities.auto.specification;
 
+import fr.nvh.spring.utilities.auto.specification.param.RequestParamType;
+import fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator;
+import fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType;
+import fr.nvh.spring.utilities.auto.specification.spring.LinkedDancerEntity;
+import fr.nvh.spring.utilities.auto.specification.spring.LinkedDancerRepository;
 import fr.nvh.spring.utilities.auto.specification.spring.TestApplication;
 import fr.nvh.spring.utilities.auto.specification.spring.TestEntity;
 import fr.nvh.spring.utilities.auto.specification.spring.TestEntityBuilder;
 import fr.nvh.spring.utilities.auto.specification.spring.TestEntityRepository;
 import fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.AbstractObjectAssert;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.ObjectAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.MAX_NUMBER_VALUE;
 import static fr.nvh.spring.utilities.auto.specification.commons.TestConstants.MIN_NUMBER_VALUE;
@@ -248,6 +263,7 @@ import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityReques
 import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.STRING_NOT_EQUAL;
 import static fr.nvh.spring.utilities.auto.specification.spring.TestEntityRequestParamType.STRING_NOT_LIKE;
 
+@Slf4j
 @ExtendWith(SpringExtension.class)
 @Import(value = {TestApplication.class})
 class AutoSpecificationTest {
@@ -255,10 +271,72 @@ class AutoSpecificationTest {
     @Autowired
     private TestEntityRepository repository;
 
+    @Autowired
+    private LinkedDancerRepository linkedDancerRepository;
+
     @BeforeEach
     void setUp() {
         repository.deleteAll();
         repository.saveAllAndFlush(TestEntityBuilder.build(TEST_ENTITY_COUNT));
+    }
+
+    @Nested
+    class FieldNameEdgeCases {
+
+        @Test
+        void using_not_over_search_and_null_fieldName_should_throw_exception() {
+            // given
+            String value = "string_0";
+            AutoSpecification<RequestParamType, TestEntity> specification = buildAutoSpecification(null, value);
+
+            // when + then
+            Assertions.assertThatExceptionOfType(NullPointerException.class)
+                    .isThrownBy(() -> repository.findAll(specification));
+        }
+
+        @Test
+        void using_not_over_search_and_fieldName_ends_with_dot_should_throw_exception() {
+            // given
+            String value = "string_0";
+            AutoSpecification<RequestParamType, TestEntity> specification = buildAutoSpecification("fieldName.", value);
+
+            // when + then
+            Assertions.assertThatThrownBy(() -> repository.findAll(specification))
+                    .isInstanceOf(InvalidDataAccessApiUsageException.class)
+                    .cause()
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("dot");
+        }
+
+        @Test
+        void using_not_over_search_and_fieldName_starts_with_dot_should_throw_exception() {
+            // given
+            String value = "string_0";
+            String fieldName = ".fieldName";
+            AutoSpecification<RequestParamType, TestEntity> specification = buildAutoSpecification(fieldName, value);
+
+            // when + then
+            Assertions.assertThatThrownBy(() -> repository.findAll(specification))
+                    .isInstanceOf(InvalidDataAccessApiUsageException.class)
+                    .cause()
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContainingAll(fieldName, "dot");
+        }
+
+        @Test
+        void using_not_over_search_and_fieldName_not_exists_should_throw_exception() {
+            // given
+            String value = "string_0";
+            String fieldName = "fieldName";
+            AutoSpecification<RequestParamType, TestEntity> specification = buildAutoSpecification(fieldName, value);
+
+            // when + then
+            Assertions.assertThatThrownBy(() -> repository.findAll(specification))
+                    .isInstanceOf(InvalidDataAccessApiUsageException.class)
+                    .cause()
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining(fieldName);
+        }
     }
 
     @Nested
@@ -280,7 +358,7 @@ class AutoSpecificationTest {
             // then
             Assertions.assertThat(result)
                     .hasSize(1)
-                    .element(0)
+                    .first()
                     .extracting(TestEntity::getString)
                     .isEqualTo(value);
         }
@@ -300,7 +378,7 @@ class AutoSpecificationTest {
             // then
             Assertions.assertThat(result)
                     .hasSize(1)
-                    .element(0)
+                    .first()
                     .extracting(TestEntity::getString)
                     .isEqualTo(value);
         }
@@ -334,7 +412,7 @@ class AutoSpecificationTest {
             // then
             Assertions.assertThat(result)
                     .hasSize(1)
-                    .element(0)
+                    .first()
                     .extracting(TestEntity::getNumberMultiplyBy5)
                     .isEqualTo(number * 5);
         }
@@ -367,7 +445,7 @@ class AutoSpecificationTest {
             // then
             Assertions.assertThat(result)
                     .hasSize(1)
-                    .element(0)
+                    .first()
                     .extracting(TestEntity::getString)
                     .isEqualTo(value);
         }
@@ -384,7 +462,7 @@ class AutoSpecificationTest {
             // then
             Assertions.assertThat(result)
                     .hasSize(1)
-                    .element(0)
+                    .first()
                     .extracting(TestEntity::getString)
                     .isNull();
         }
@@ -417,7 +495,7 @@ class AutoSpecificationTest {
             // then
             Assertions.assertThat(result)
                     .hasSize(1)
-                    .element(0)
+                    .first()
                     .extracting(TestEntity::getAnotherString)
                     .isEqualTo(value);
         }
@@ -450,7 +528,7 @@ class AutoSpecificationTest {
             // then
             Assertions.assertThat(result)
                     .hasSize(1)
-                    .element(0)
+                    .first()
                     .extracting(TestEntity::getString)
                     .matches(string -> string.endsWith("_2"));
         }
@@ -467,7 +545,7 @@ class AutoSpecificationTest {
             // then
             Assertions.assertThat(result)
                     .hasSize(1)
-                    .element(0)
+                    .first()
                     .extracting(TestEntity::getString)
                     .isNull();
         }
@@ -501,7 +579,7 @@ class AutoSpecificationTest {
             // then
             Assertions.assertThat(result)
                     .hasSize(1)
-                    .element(0)
+                    .first()
                     .extracting(TestEntity::getAnotherString)
                     .matches(string -> string.contains("_2_"));
         }
@@ -573,7 +651,7 @@ class AutoSpecificationTest {
             // then
             Assertions.assertThat(result)
                     .hasSize(1)
-                    .element(0)
+                    .first()
                     .extracting(TestEntity::getString)
                     .isEqualTo("string_2");
         }
@@ -641,7 +719,7 @@ class AutoSpecificationTest {
             // then
             Assertions.assertThat(result)
                     .hasSize(1)
-                    .element(0)
+                    .first()
                     .extracting(TestEntity::getNumberMultiplyBy5)
                     .isEqualTo(value);
         }
@@ -658,7 +736,7 @@ class AutoSpecificationTest {
             // then
             Assertions.assertThat(result)
                     .hasSize(1)
-                    .element(0)
+                    .first()
                     .extracting(TestEntity::getNumberMultiplyBy5)
                     .isNull();
         }
@@ -768,7 +846,7 @@ class AutoSpecificationTest {
             // then
             Assertions.assertThat(result)
                     .hasSize(1)
-                    .element(0)
+                    .first()
                     .extracting(TestEntity::getNumberMultiplyBy5)
                     .isEqualTo(MAX_NUMBER_VALUE);
         }
@@ -842,7 +920,7 @@ class AutoSpecificationTest {
             // then
             Assertions.assertThat(result)
                     .hasSize(1)
-                    .element(0)
+                    .first()
                     .extracting(TestEntity::getNumberMultiplyBy5)
                     .isEqualTo(MIN_NUMBER_VALUE);
         }
@@ -860,6 +938,96 @@ class AutoSpecificationTest {
         }
     }
 
+    @Nested
+    class FieldNameWithDot {
+
+        /**
+         * This linked dance is like this a linked list : each dancer have a left hand and a right hand, except
+         * the head and the tail. So, we can test the auto specification with a field name having any number of dot. <br>
+         * We do not recommend having this many levels of nesting for performance-related queries;
+         * this depth is only used for testing purposes.
+         */
+        private static final int LINKED_DANCE_LENGTH = 5;
+
+        @BeforeEach
+        void setUp() {
+            linkedDancerRepository.deleteAll();
+            LongStream.range(0, LINKED_DANCE_LENGTH)
+                    .mapToObj(LinkedDancerEntity::new)
+                    .forEach(linkedDancerRepository::save);
+
+            List<LinkedDancerEntity> allDancer = linkedDancerRepository.findAll();
+
+            for (int i = 0; i < allDancer.size(); i++) {
+                LinkedDancerEntity dancer = allDancer.get(i);
+                dancer.setLeftHand(getDancerIfExists(allDancer, i - 1));
+                dancer.setRightHand(getDancerIfExists(allDancer, i + 1));
+                linkedDancerRepository.save(dancer);
+            }
+        }
+
+        @Test
+        void using_dot_separator_in_fieldName_0_time_should_get_the_right_value() {
+            // given
+            LinkedDancerEntity head =
+                    linkedDancerRepository.findByLeftHandIsNull().orElseThrow(EntityNotFoundException::new);
+
+            String fieldName = "id";
+
+            AutoSpecification<RequestParamType, LinkedDancerEntity> autoSpecification =
+                    buildAutoSpecification(fieldName, String.valueOf(head.getId()));
+
+            // when
+            var rightHand = linkedDancerRepository.findAll(autoSpecification);
+
+            // then
+            Assertions.assertThat(rightHand).hasSize(1).first().isEqualTo(head);
+        }
+
+        @MethodSource("oneToLinkedDanceLengthExceptHeadAndTail")
+        @ParameterizedTest(name = "using_dot_separator_in_fieldName_{0}_time_should_get_the_right_value")
+        void using_dot_separator_in_fieldName_n_time_should_get_the_right_value(int count) {
+            // given
+            LinkedDancerEntity head =
+                    linkedDancerRepository.findByLeftHandIsNull().orElseThrow(EntityNotFoundException::new);
+
+            String fieldName = "leftHand.".repeat(count) + "id";
+
+            AutoSpecification<RequestParamType, LinkedDancerEntity> autoSpecification =
+                    buildAutoSpecification(fieldName, String.valueOf(head.getId()));
+
+            // when
+            var rightHand = linkedDancerRepository.findAll(autoSpecification);
+
+            // then
+            ObjectAssert<LinkedDancerEntity> entityObjectAssert =
+                    Assertions.assertThat(rightHand).hasSize(1).first();
+
+            extractAssertDancer(count, entityObjectAssert).isEqualTo(head);
+        }
+
+        private static LinkedDancerEntity getDancerIfExists(List<LinkedDancerEntity> entities, int i) {
+            if (i < 0 || i >= entities.size()) {
+                return null;
+            }
+            return entities.get(i);
+        }
+
+        private static AbstractObjectAssert<?, LinkedDancerEntity> extractAssertDancer(
+                int count, ObjectAssert<LinkedDancerEntity> entityObjectAssert) {
+            AbstractObjectAssert<?, LinkedDancerEntity> extracting =
+                    entityObjectAssert.extracting(LinkedDancerEntity::getLeftHand);
+            for (int i = 0; i < count - 1; i++) {
+                extracting = extracting.extracting(LinkedDancerEntity::getLeftHand);
+            }
+            return extracting;
+        }
+
+        public static IntStream oneToLinkedDanceLengthExceptHeadAndTail() {
+            return IntStream.range(1, LINKED_DANCE_LENGTH - 2);
+        }
+    }
+
     private static AutoSpecification<TestEntityRequestParamType, TestEntity> buildSimpleAutoSpecification(
             TestEntityRequestParamType paramType, Object value) {
         String valueString = Objects.isNull(value) ? null : Objects.toString(value);
@@ -867,5 +1035,26 @@ class AutoSpecificationTest {
         Map<TestEntityRequestParamType, String> params = new HashMap<>();
         params.put(paramType, valueString);
         return new AutoSpecification<>(TestEntityRequestParamType.values(), params);
+    }
+
+    private static <E> AutoSpecification<RequestParamType, E> buildAutoSpecification(String fieldName, String value) {
+        RequestParamType requestParamType = new RequestParamTypeImpl(fieldName);
+        Map<RequestParamType, String> params = new HashMap<>();
+        params.put(requestParamType, value);
+        RequestParamType[] requestParamTypes = {requestParamType};
+        return new AutoSpecification<>(requestParamTypes, params);
+    }
+
+    private record RequestParamTypeImpl(String fieldName) implements RequestParamType {
+
+        @Override
+        public @NonNull SpecificationParamType paramType() {
+            return SpecificationParamType.OVER_SEARCH_EXCLUDED;
+        }
+
+        @Override
+        public @NonNull SpecificationOperator operator() {
+            return SpecificationOperator.EQUAL;
+        }
     }
 }

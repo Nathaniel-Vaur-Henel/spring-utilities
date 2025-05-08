@@ -213,7 +213,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.HashMap;
 
-import static fr.nvh.spring.utilities.fellowship.person.TestConstants.PERSONS_COUNT;
+import static fr.nvh.spring.utilities.fellowship.TestConstants.ENTITY_COUNT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -225,7 +225,7 @@ class PersonRepositoryTest {
     @BeforeEach
     void setUp() {
         personRepository.deleteAll();
-        personRepository.saveAllAndFlush(PersonBuilder.buildPersons(PERSONS_COUNT));
+        personRepository.saveAllAndFlush(PersonBuilder.buildPersons(ENTITY_COUNT));
     }
 
     @Test
@@ -234,7 +234,7 @@ class PersonRepositoryTest {
         var result = personRepository.findAll();
 
         // then
-        assertThat(result).hasSize(PERSONS_COUNT);
+        assertThat(result).hasSize(ENTITY_COUNT);
     }
 
     @Test
@@ -247,7 +247,7 @@ class PersonRepositoryTest {
         var result = personRepository.findAll(personSpecification);
 
         // then
-        assertThat(result).hasSize(PERSONS_COUNT);
+        assertThat(result).hasSize(ENTITY_COUNT);
     }
 
     @Test

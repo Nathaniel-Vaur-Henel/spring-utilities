@@ -212,12 +212,12 @@ import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
 import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class PersonEntityTest {
+class PersonDtoTest {
 
     @Test
     void toString_with_lastName_and_firstName_should_return_concatenation() {
         // given
-        var person = new PersonEntity();
+        var person = new PersonDto();
         person.setFirstName(FIRST_NAME);
         person.setLastName(LAST_NAME);
 
@@ -229,7 +229,7 @@ class PersonEntityTest {
     @Test
     void toString_with_firstName_should_return_firstName() {
         // given
-        var person = new PersonEntity();
+        var person = new PersonDto();
         person.setFirstName(FIRST_NAME);
 
         // when

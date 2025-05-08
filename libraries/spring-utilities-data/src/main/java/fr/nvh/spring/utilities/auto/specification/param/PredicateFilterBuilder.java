@@ -207,15 +207,19 @@
 package fr.nvh.spring.utilities.auto.specification.param;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import lombok.NonNull;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
  * This interface represents how to build a {@link Predicate} for the {@link Specification} from
  * {@link RequestParamType#operator()} .
  */
-interface PredicateFilterBuilder {
+abstract class PredicateFilterBuilder {
+
+    public static final String DOT_SEPARATOR = ".";
 
     /**
      * build a {@link Predicate} according to the implementation and using the params.
@@ -227,6 +231,26 @@ interface PredicateFilterBuilder {
      * @return a predicate according to the implementation
      * @param <T> {@link RequestParamType}
      */
-    <T extends RequestParamType> Predicate buildPredicate(
+    abstract <T extends RequestParamType> Predicate buildPredicate(
             T filter, Root<?> root, CriteriaBuilder builder, String searchValue);
+
+    Path<String> buildPath(Root<?> root, @NonNull String fieldName) {
+        if (!fieldName.contains(DOT_SEPARATOR)) {
+            return root.get(fieldName);
+        }
+
+        if (fieldName.startsWith(DOT_SEPARATOR) || fieldName.endsWith(DOT_SEPARATOR)) {
+            throw new IllegalArgumentException(
+                    "'" + fieldName + "' field name is not valid : cannot start or end with a dot");
+        }
+
+        String[] fieldNames = fieldName.split("\\.");
+        Path<String> acc = root.get(fieldNames[0]);
+        int bound = fieldNames.length;
+        for (int i = 1; i < bound; i++) {
+            String s = fieldNames[i];
+            acc = acc.get(s);
+        }
+        return acc;
+    }
 }

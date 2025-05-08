@@ -206,34 +206,34 @@
 
 package fr.nvh.spring.utilities.fellowship.person;
 
-import org.junit.jupiter.api.Test;
+import fr.nvh.spring.utilities.DefaultMapper;
+import fr.nvh.spring.utilities.fellowship.item.ItemEntity;
+import org.springframework.stereotype.Component;
 
-import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.List;
 
-class PersonEntityTest {
+@Component
+public class PersonMapper implements DefaultMapper<PersonEntity, PersonDto> {
 
-    @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
+    @Override
+    public PersonDto toDto(PersonEntity personEntity) {
+        if (personEntity == null) {
+            return null;
+        }
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
+        PersonDto.PersonDtoBuilder personDto = PersonDto.builder();
+
+        personDto.itemNames(mapItemEntitiesToStrings(personEntity.getItems()));
+        personDto.id(personEntity.getId());
+        personDto.firstName(personEntity.getFirstName());
+        personDto.lastName(personEntity.getLastName());
+        personDto.email(personEntity.getEmail());
+        personDto.age(personEntity.getAge());
+
+        return personDto.build();
     }
 
-    @Test
-    void toString_with_firstName_should_return_firstName() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
+    private List<String> mapItemEntitiesToStrings(List<ItemEntity> itemEntities) {
+        return itemEntities.stream().map(ItemEntity::getName).toList();
     }
 }

@@ -204,36 +204,34 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities.fellowship.item;
 
-import org.junit.jupiter.api.Test;
+import fr.nvh.spring.utilities.WrappedListWithSize;
+import fr.nvh.spring.utilities.auto.specification.MapStringToMapRequestParamTypeConverter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.List;
+import java.util.Map;
 
-class PersonEntityTest {
+@Component
+@RequiredArgsConstructor
+public class ItemFindAllUseCase {
+    private final ItemRepository itemRepository;
+    private final ItemMapper itemMapper;
 
-    @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
-
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
+    public List<ItemDto> findAll(Map<ItemRequestParamType, String> typedParams) {
+        ItemSpecification itemSpecification = new ItemSpecification(typedParams);
+        List<ItemEntity> all = itemRepository.findAll(itemSpecification);
+        List<ItemDto> allDto = all.stream().map(itemMapper::toDto).toList();
+        return new WrappedListWithSize<>(allDto);
     }
 
-    @Test
-    void toString_with_firstName_should_return_firstName() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
+    public List<ItemDto> convertAndFindAll(Map<String, String> params) {
+        return findAll(convert(params));
+    }
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
+    private static Map<ItemRequestParamType, String> convert(Map<String, String> params) {
+        return MapStringToMapRequestParamTypeConverter.convert(ItemRequestParamType.values(), params);
     }
 }

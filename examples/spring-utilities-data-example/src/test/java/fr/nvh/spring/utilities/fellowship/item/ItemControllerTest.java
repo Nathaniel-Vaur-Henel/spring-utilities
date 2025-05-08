@@ -204,36 +204,42 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities.fellowship.item;
 
+import fr.nvh.spring.utilities.fellowship.TestUtils;
+import fr.nvh.spring.utilities.fellowship.person.PersonBuilder;
+import fr.nvh.spring.utilities.fellowship.person.PersonMapper;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+@WebMvcTest(ItemController.class)
+class ItemControllerTest {
 
-class PersonEntityTest {
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private ItemFindAllUseCase itemFindAllUseCase;
+
+    private final ItemMapper itemMapper = new ItemMapper(new PersonMapper());
 
     @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
+    void getAllItems() throws Exception {
+        var itemEntities = ItemBuilder.buildItems(3, PersonBuilder.buildPerson(1));
+        Mockito.when(itemFindAllUseCase.convertAndFindAll(Mockito.any()))
+                .thenReturn(TestUtils.convertToDto(itemEntities, itemMapper));
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
-    }
-
-    @Test
-    void toString_with_firstName_should_return_firstName() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/items").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)))
+                .andDo(MockMvcResultHandlers.print());
     }
 }

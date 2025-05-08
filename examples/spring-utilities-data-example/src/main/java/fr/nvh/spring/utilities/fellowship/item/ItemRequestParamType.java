@@ -204,36 +204,58 @@
  *
  */
 
-package fr.nvh.spring.utilities.fellowship.person;
+package fr.nvh.spring.utilities.fellowship.item;
 
-import org.junit.jupiter.api.Test;
+import fr.nvh.spring.utilities.auto.specification.param.RequestParamType;
+import fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator;
+import fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType;
+import lombok.NonNull;
 
-import static fr.nvh.spring.utilities.fellowship.TestConstants.FIRST_NAME;
-import static fr.nvh.spring.utilities.fellowship.TestConstants.LAST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.CONTAINING;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.GREATER_OR_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.LESS_OR_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationOperator.NOT_EQUAL;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_EXCLUDED;
+import static fr.nvh.spring.utilities.auto.specification.param.SpecificationParamType.OVER_SEARCH_INCLUDED;
 
-class PersonEntityTest {
+public enum ItemRequestParamType implements RequestParamType {
+    OWNER_FILTER("owner.filter", OVER_SEARCH, CONTAINING),
+    OWNER_FIRST_NAME("owner.firstName", OVER_SEARCH_INCLUDED, EQUAL),
+    OWNER_LAST_NAME("owner.lastName", OVER_SEARCH_INCLUDED, EQUAL),
+    OWNER_EMAIL("owner.email", OVER_SEARCH_INCLUDED, CONTAINING),
+    OWNER_CONTAINING_AGE("owner.age", OVER_SEARCH_EXCLUDED, NOT_EQUAL), // NOSONAR ignore fo readability
+    OWNER_MIN_AGE("owner.age", OVER_SEARCH_EXCLUDED, GREATER_OR_EQUAL),
+    OWNER_MAX_AGE("owner.age", OVER_SEARCH_EXCLUDED, LESS_OR_EQUAL),
 
-    @Test
-    void toString_with_lastName_and_firstName_should_return_concatenation() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
-        person.setLastName(LAST_NAME);
+    ITEM_NAME("name", OVER_SEARCH_EXCLUDED, EQUAL),
+    ;
+    private final String fieldName;
+    private final SpecificationParamType paramType;
+    private final SpecificationOperator operator;
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME + " " + LAST_NAME);
+    ItemRequestParamType(String fieldAndFilterName, SpecificationParamType paramType, SpecificationOperator operator) {
+        this.fieldName = fieldAndFilterName;
+        this.paramType = paramType;
+        this.operator = operator;
     }
 
-    @Test
-    void toString_with_firstName_should_return_firstName() {
-        // given
-        var person = new PersonEntity();
-        person.setFirstName(FIRST_NAME);
+    @NonNull
+    @Override
+    public String fieldName() {
+        return fieldName;
+    }
 
-        // when
-        String personString = person.toString();
-        assertThat(personString).isEqualTo(FIRST_NAME);
+    @NonNull
+    @Override
+    public SpecificationParamType paramType() {
+        return paramType;
+    }
+
+    @NonNull
+    @Override
+    public SpecificationOperator operator() {
+        return operator;
     }
 }

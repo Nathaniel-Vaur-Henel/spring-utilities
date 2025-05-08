@@ -218,13 +218,17 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PersonFindAllUseCase {
     private final PersonRepository personRepository;
+    private final PersonMapper personMapper;
 
-    public List<PersonEntity> findAll(Map<PersonRequestParamType, String> typedParams) {
+    public List<PersonDto> findAll(Map<PersonRequestParamType, String> typedParams) {
         PersonSpecification personSpecification = new PersonSpecification(typedParams);
-        return new WrappedListWithSize<>(personRepository.findAll(personSpecification));
+
+        List<PersonEntity> all = personRepository.findAll(personSpecification);
+        List<PersonDto> allDto = all.stream().map(personMapper::toDto).toList();
+        return new WrappedListWithSize<>(allDto);
     }
 
-    public List<PersonEntity> convertAndFindAll(Map<String, String> params) {
+    public List<PersonDto> convertAndFindAll(Map<String, String> params) {
         return findAll(convert(params));
     }
 

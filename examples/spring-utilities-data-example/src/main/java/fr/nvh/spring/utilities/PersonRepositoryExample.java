@@ -206,6 +206,7 @@
 
 package fr.nvh.spring.utilities;
 
+import fr.nvh.spring.utilities.fellowship.person.PersonDto;
 import fr.nvh.spring.utilities.fellowship.person.PersonEntity;
 import fr.nvh.spring.utilities.fellowship.person.PersonFindAllUseCase;
 import fr.nvh.spring.utilities.fellowship.person.PersonRepository;
@@ -219,6 +220,9 @@ import java.util.Map;
 
 /**
  * Simple examples of a {@link fr.nvh.spring.utilities.auto.specification.param.RequestParamType}.
+ * Examples used are the same as in {@link ItemRepositoryExample} with point of view of {@link PersonRepository} and
+ * {@link PersonFindAllUseCase}.
+ *
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -228,7 +232,7 @@ class PersonRepositoryExample {
     private final PersonFindAllUseCase personFindAllUseCase;
 
     void testAndLogAll() {
-        log.info("PersonRepositoryExample testAndLogAll");
+        log.info("* PersonRepositoryExample testAndLogAll *");
 
         testRepositoryFindAll();
         testFindAllUseCaseWithNoParam();
@@ -238,10 +242,11 @@ class PersonRepositoryExample {
         testFindAllUseCaseWithEqualToNullParam();
         testFindAllUseCaseWithMinParam();
         testFindAllUseCaseWithMinAndMaxParam();
+        testFindAllUseCaseWithEqualAndDotParam();
     }
 
     private void testRepositoryFindAll() {
-        WrappedListWithSize<PersonEntity> allPersons = new WrappedListWithSize<>(this.personRepository.findAll());
+        WrappedListWithSize<PersonEntity> allPersons = new WrappedListWithSize<>(personRepository.findAll());
         log.info("The full fellowship: {}", allPersons);
         // Expected: The full fellowship: 9 [Gandalf The Grey, Aragorn, Boromir, Legolas, Gimli, Frodo
         // Baggins, Samwise Gamegee, Meriadoc Brandybuck, Peregrin Took]
@@ -249,7 +254,7 @@ class PersonRepositoryExample {
 
     private void testFindAllUseCaseWithNoParam() {
         Map<PersonRequestParamType, String> noParams = new EnumMap<>(PersonRequestParamType.class);
-        List<PersonEntity> allPersons = personFindAllUseCase.findAll(noParams);
+        List<PersonDto> allPersons = personFindAllUseCase.findAll(noParams);
         log.info("The full fellowship again: {}", allPersons);
         // Expected: The full fellowship again: 9 [Gandalf The Grey, Aragorn, Boromir, Legolas, Gimli,
         // Frodo Baggins, Samwise Gamegee, Meriadoc Brandybuck, Peregrin Took]
@@ -258,7 +263,7 @@ class PersonRepositoryExample {
     private void testFindAlUseCaseWithOverSearchParam() {
         Map<PersonRequestParamType, String> theShire = new EnumMap<>(PersonRequestParamType.class);
         theShire.put(PersonRequestParamType.FILTER, "theshire");
-        List<PersonEntity> allPersons = personFindAllUseCase.findAll(theShire);
+        List<PersonDto> allPersons = personFindAllUseCase.findAll(theShire);
         log.info("The Shire: {}", allPersons);
         // Expected: The Shire: 4 [Frodo Baggins, Samwise Gamegee, Meriadoc Brandybuck, Peregrin Took]
     }
@@ -266,7 +271,7 @@ class PersonRepositoryExample {
     private void testFindAlUseCaseWithContainingParam() {
         Map<PersonRequestParamType, String> erebor = new EnumMap<>(PersonRequestParamType.class);
         erebor.put(PersonRequestParamType.EMAIL, "erebor");
-        List<PersonEntity> allPersons = personFindAllUseCase.findAll(erebor);
+        List<PersonDto> allPersons = personFindAllUseCase.findAll(erebor);
         log.info("Erebor: {}", allPersons);
         // Expected: The Shire: 1 [Gimli]
     }
@@ -274,7 +279,7 @@ class PersonRepositoryExample {
     private void testFindAllUseCaseWithEqualParam() {
         Map<PersonRequestParamType, String> boromir = new EnumMap<>(PersonRequestParamType.class);
         boromir.put(PersonRequestParamType.FIRST_NAME, "Boromir");
-        List<PersonEntity> allPersons = personFindAllUseCase.findAll(boromir);
+        List<PersonDto> allPersons = personFindAllUseCase.findAll(boromir);
         log.info("Boromir: {}", allPersons);
         // Expected: Boromir: 1 [Boromir]
     }
@@ -282,7 +287,7 @@ class PersonRepositoryExample {
     private void testFindAllUseCaseWithEqualToNullParam() {
         Map<PersonRequestParamType, String> theNoLastNamed = new EnumMap<>(PersonRequestParamType.class);
         theNoLastNamed.put(PersonRequestParamType.LAST_NAME, null);
-        List<PersonEntity> allPersons = personFindAllUseCase.findAll(theNoLastNamed);
+        List<PersonDto> allPersons = personFindAllUseCase.findAll(theNoLastNamed);
         log.info("They have no last name: {}", allPersons);
         // Expected: They have no last name: 4 [Aragorn, Boromir, Legolas, Gimli]
     }
@@ -290,7 +295,7 @@ class PersonRepositoryExample {
     private void testFindAllUseCaseWithMinParam() {
         Map<PersonRequestParamType, String> theThousandYearOld = new EnumMap<>(PersonRequestParamType.class);
         theThousandYearOld.put(PersonRequestParamType.MIN_AGE, "1000");
-        List<PersonEntity> allPersons = personFindAllUseCase.findAll(theThousandYearOld);
+        List<PersonDto> allPersons = personFindAllUseCase.findAll(theThousandYearOld);
         log.info("The thousand-year-old and more: {}", allPersons);
         // Expected: The thousand-year-old and more: 2 [Gandalf The Grey, Legolas]
     }
@@ -299,8 +304,15 @@ class PersonRepositoryExample {
         Map<PersonRequestParamType, String> theHundredYearOld = new EnumMap<>(PersonRequestParamType.class);
         theHundredYearOld.put(PersonRequestParamType.MIN_AGE, "100");
         theHundredYearOld.put(PersonRequestParamType.MAX_AGE, "200");
-        List<PersonEntity> allPersons = personFindAllUseCase.findAll(theHundredYearOld);
+        List<PersonDto> allPersons = personFindAllUseCase.findAll(theHundredYearOld);
         log.info("The hundred-year-old: {}", allPersons);
         // Expected: The hundred-year-old:1  [Gimli]
+    }
+
+    private void testFindAllUseCaseWithEqualAndDotParam() {
+        Map<PersonRequestParamType, String> daggerOwnersParams = new EnumMap<>(PersonRequestParamType.class);
+        daggerOwnersParams.put(PersonRequestParamType.HAS, "Dagger");
+        log.info("Dagger owners: {}", personFindAllUseCase.findAll(daggerOwnersParams));
+        // Expected: Dagger owners: 2 [Meriadoc Brandybuck, Peregrin Took]
     }
 }
